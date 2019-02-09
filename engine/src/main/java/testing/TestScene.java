@@ -124,6 +124,8 @@ public class TestScene extends Scene{
 	
 	public static void main(String[] args) throws SecurityException, IOException {
 		
+		//RUN CONFIG FOR DEBUGGING PURPOSES: -javaagent:/home/michael/eclipse-workspace/engine/libs/debug/lwjglx-debug-1.0.0.jar
+		
 		String loggingProperties = "handlers= java.util.logging.ConsoleHandler\r\n" + 
 		".level= WARNING\r\n" + 
 		"java.util.logging.ConsoleHandler.level = INFO\r\n" + 

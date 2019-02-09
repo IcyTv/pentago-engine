@@ -1,17 +1,24 @@
 package core.loaders;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Transparency;
+import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.ComponentColorModel;
 import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferByte;
-import java.awt.image.DataBufferInt;
-import java.awt.image.DataBufferShort;
-import java.awt.image.DataBufferUShort;
+import java.awt.image.Raster;
+import java.awt.image.WritableRaster;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -29,8 +36,6 @@ import org.lwjgl.opengl.GL30;
 import core.models.ModelData;
 import core.models.RawModel;
 import core.textures.TextureData;
-import de.matthiasmann.twl.utils.PNGDecoder;
-import de.matthiasmann.twl.utils.PNGDecoder.Format;
 
 public abstract class Loader {
 	
@@ -77,7 +82,7 @@ public abstract class Loader {
 		logger.info("textureId: " + textureID);
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		logger.info("Data");
-		TextureData data = decodeTextureFile("res/" + file + ".png");
+		TextureData data = decodeImage("res/" + file + ".png");
 		logger.info("Connect data to texture");
 		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, data.getWidth(), data.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data.getBuffer());
 		logger.info("Parameters");
@@ -99,7 +104,7 @@ public abstract class Loader {
 		}
 		
 		for(int i = 0; i < textureFiles.length; i++) {
-			TextureData data = decodeTextureFile("res/" + folder + textureFiles[i] + ".png");
+			TextureData data = decodeImage("res/" + folder + textureFiles[i] + ".png");
 			GL11.glTexImage2D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
 					0, GL11.GL_RGBA, data.getWidth(), 
 					data.getHeight(), 0, GL11.GL_RGBA, 
@@ -113,49 +118,47 @@ public abstract class Loader {
 		return textureID;
 	}
 	
-	private static TextureData decodeTextureFile(String fileName) {
-		int width = 0;
-		int height = 0;
-		ByteBuffer byteBuffer = null;
+	private static TextureData decodeImage(String filename) {
+		BufferedImage bufferedImage;
 		try {
-			FileInputStream in = new FileInputStream(fileName);
-			//BufferedImage decoder = ImageIO.read(in);
-			PNGDecoder decoder = new PNGDecoder(in);
-			width = decoder.getWidth();
-			height = decoder.getHeight();
-			byteBuffer = ByteBuffer.allocateDirect(4 * width * height);
-//			DataBuffer dataBuffer = decoder.getData().getDataBuffer();
-//			if (dataBuffer instanceof DataBufferByte) {
-//			    byte[] pixelData = ((DataBufferByte) dataBuffer).getData();
-//			    byteBuffer = ByteBuffer.wrap(pixelData);
-//			}
-//			else if (dataBuffer instanceof DataBufferUShort) {
-//			    short[] pixelData = ((DataBufferUShort) dataBuffer).getData();
-//			    byteBuffer = ByteBuffer.allocate(pixelData.length * 2);
-//			    byteBuffer.asShortBuffer().put(ShortBuffer.wrap(pixelData));
-//			}
-//			else if (dataBuffer instanceof DataBufferShort) {
-//			    short[] pixelData = ((DataBufferShort) dataBuffer).getData();
-//			    byteBuffer = ByteBuffer.allocate(pixelData.length * 2);
-//			    byteBuffer.asShortBuffer().put(ShortBuffer.wrap(pixelData));
-//			}
-//			else if (dataBuffer instanceof DataBufferInt) {
-//			    int[] pixelData = ((DataBufferInt) dataBuffer).getData();
-//			    byteBuffer = ByteBuffer.allocate(pixelData.length * 4);
-//			    byteBuffer.asIntBuffer().put(IntBuffer.wrap(pixelData));
-//			}
-//			else {
-//			    throw new IllegalArgumentException("Not implemented for data buffer type: " + dataBuffer.getClass());
-//			}
-			decoder.decode(byteBuffer, width * 4, Format.RGBA);
-			byteBuffer.flip();
-			in.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.severe("Tried to load texture " + fileName + ", didn't work");
-			System.exit(-1);
+			FileInputStream in = new FileInputStream(filename);
+			bufferedImage = ImageIO.read(in);
+		} catch (IOException e) {
+			logger.severe("Image " + filename + "could not load");
+			return null;
 		}
-		return new TextureData(byteBuffer, width, height);
+		
+		
+		ByteBuffer imageBuffer;
+	    WritableRaster raster;
+	    BufferedImage texImage;
+
+	    ColorModel glAlphaColorModel = new ComponentColorModel(ColorSpace
+	            .getInstance(ColorSpace.CS_sRGB), new int[] { 8, 8, 8, 8 },
+	            true, false, Transparency.TRANSLUCENT, DataBuffer.TYPE_BYTE);
+
+	    raster = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE,
+	            bufferedImage.getWidth(), bufferedImage.getHeight(), 4, null);
+	    texImage = new BufferedImage(glAlphaColorModel, raster, true,
+	            new Hashtable());
+
+	    // copy the source image into the produced image
+	    Graphics g = texImage.getGraphics();
+	    g.setColor(new Color(0f, 0f, 0f, 0f));
+	    g.fillRect(0, 0, 256, 256);
+	    g.drawImage(bufferedImage, 0, 0, null);
+
+	    // build a byte buffer from the temporary image
+	    // that be used by OpenGL to produce a texture.
+	    byte[] data = ((DataBufferByte) texImage.getRaster().getDataBuffer())
+	            .getData();
+
+	    imageBuffer = ByteBuffer.allocateDirect(data.length);
+	    imageBuffer.order(ByteOrder.nativeOrder());
+	    imageBuffer.put(data, 0, data.length);
+	    imageBuffer.flip();
+	    
+	    return new TextureData(imageBuffer, bufferedImage.getWidth(), bufferedImage.getHeight());
 	}
 	
 	private static int createVAO() {
