@@ -6,7 +6,9 @@ import java.awt.image.DataBufferByte;
 import java.awt.image.DataBufferInt;
 import java.awt.image.DataBufferShort;
 import java.awt.image.DataBufferUShort;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -25,6 +27,7 @@ import org.lwjgl.opengl.GL14;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.stb.STBImage;
 
 import core.models.ModelData;
 import core.models.RawModel;
@@ -112,47 +115,23 @@ public abstract class Loader {
 	}
 	
 	private static TextureData decodeTextureFile(String fileName) {
-		int width = 0;
-		int height = 0;
-		ByteBuffer byteBuffer = null;
-		try {
-			FileInputStream in = new FileInputStream(fileName);
-			BufferedImage decoder = ImageIO.read(in);
-			width = decoder.getWidth();
-			height = decoder.getHeight();
-			byteBuffer = ByteBuffer.allocateDirect(4 * width * height);
-			DataBuffer dataBuffer = decoder.getData().getDataBuffer();
-			if (dataBuffer instanceof DataBufferByte) {
-			    byte[] pixelData = ((DataBufferByte) dataBuffer).getData();
-			    byteBuffer = ByteBuffer.wrap(pixelData);
-			}
-			else if (dataBuffer instanceof DataBufferUShort) {
-			    short[] pixelData = ((DataBufferUShort) dataBuffer).getData();
-			    byteBuffer = ByteBuffer.allocate(pixelData.length * 2);
-			    byteBuffer.asShortBuffer().put(ShortBuffer.wrap(pixelData));
-			}
-			else if (dataBuffer instanceof DataBufferShort) {
-			    short[] pixelData = ((DataBufferShort) dataBuffer).getData();
-			    byteBuffer = ByteBuffer.allocate(pixelData.length * 2);
-			    byteBuffer.asShortBuffer().put(ShortBuffer.wrap(pixelData));
-			}
-			else if (dataBuffer instanceof DataBufferInt) {
-			    int[] pixelData = ((DataBufferInt) dataBuffer).getData();
-			    byteBuffer = ByteBuffer.allocate(pixelData.length * 4);
-			    byteBuffer.asIntBuffer().put(IntBuffer.wrap(pixelData));
-			}
-			else {
-			    throw new IllegalArgumentException("Not implemented for data buffer type: " + dataBuffer.getClass());
-			}
-			//decoder.decode(byteBuffer, width * 4, Format.RGBA);
-			byteBuffer.flip();
-			in.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.severe("Tried to load texture " + fileName + ", didn't work");
-			System.exit(-1);
-		}
-		return new TextureData(byteBuffer, width, height);
+		File f = new File(fileName);
+		ByteBuffer imageBuffer = null;
+        IntBuffer w = BufferUtils.createIntBuffer(1);
+        IntBuffer h = BufferUtils.createIntBuffer(1);
+        IntBuffer comp = BufferUtils.createIntBuffer(1);
+        try {
+        	if(!f.exists()) throw new IOException();
+        	
+        	imageBuffer = STBImage.stbi_load(f.toString(), w, h, comp, 4);
+        
+        	if(imageBuffer==null)throw new IOException(STBImage.stbi_failure_reason());
+        } catch(IOException e) {
+        	logger.severe("Could not load file " + fileName);
+        	logger.severe(e.toString());
+        }
+        
+        return new TextureData(imageBuffer, w.get(), h.get());
 	}
 	
 	private static int createVAO() {

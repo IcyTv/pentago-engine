@@ -13,6 +13,7 @@ dependencies{
 		implementation 'org.lwjgl:lwjgl-glfw:3.2.1' + app
 		implementation 'org.lwjgl:lwjgl:3.2.1' + app
 		implementation 'org.lwjgl:lwjgl-openal:3.2.1' + app
+		implementation 'org.lwjgl:lwjgl-stb:3.2.1' + app
 	}
 	
 	implementation 'org.joml:joml-jdk8:1.9.12'
