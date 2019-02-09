@@ -35,8 +35,8 @@ public abstract class ShaderProgram {
 		if	(programID	==	0)	{
 			System.err.println("Could not create Shader");
 		}
-		vertexShaderID = loadShader(vertexFile, GL20.GL_VERTEX_SHADER);
-		fragmentShaderID = loadShader(fragmentFile, GL20.GL_FRAGMENT_SHADER);
+		vertexShaderID = loadShader(this.getClass().getResource("").getPath() + vertexFile, GL20.GL_VERTEX_SHADER);
+		fragmentShaderID = loadShader(this.getClass().getResource("").getPath() + fragmentFile, GL20.GL_FRAGMENT_SHADER);
 		GL20.glAttachShader(programID, vertexShaderID);
 		GL20.glAttachShader(programID, fragmentShaderID);
 		bindAttributes();

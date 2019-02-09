@@ -6,14 +6,15 @@ repositories {
 }
 
 dependencies{
+	String version = "3.2.1";
 	String[] append = ["", ":natives-linux", ":natives-windows"];
 	for(String app: append){
-		implementation 'org.lwjgl:lwjgl-opengl:3.2.1' + app
-		implementation 'org.lwjgl:lwjgl-jemalloc:3.2.1' + app
-		implementation 'org.lwjgl:lwjgl-glfw:3.2.1' + app
-		implementation 'org.lwjgl:lwjgl:3.2.1' + app
-		implementation 'org.lwjgl:lwjgl-openal:3.2.1' + app
-		implementation 'org.lwjgl:lwjgl-stb:3.2.1' + app
+		implementation 'org.lwjgl:lwjgl-opengl:' + version + app
+		implementation 'org.lwjgl:lwjgl-jemalloc:' + version + app
+		implementation 'org.lwjgl:lwjgl-glfw:' + version + app
+		implementation 'org.lwjgl:lwjgl:' + version + app
+		implementation 'org.lwjgl:lwjgl-openal:' + version + app
+		implementation 'org.lwjgl:lwjgl-stb:' + version + app
 	}
 	
 	implementation 'org.joml:joml-jdk8:1.9.12'

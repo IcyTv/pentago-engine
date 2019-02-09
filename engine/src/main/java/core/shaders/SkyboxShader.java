@@ -9,8 +9,8 @@ import tools.Maths;
 
 public class SkyboxShader extends ShaderProgram{
 
-	private static final String VERTEX_FILE = "src/main/java/core/shaders/skyboxVertexShader.txt";
-	private static final String FRAGMENT_FILE = "src/main/java/core/shaders/skyboxFragmentShader.txt";
+	private static final String VERTEX_FILE = "skyboxVertexShader.glsl";
+	private static final String FRAGMENT_FILE = "skyboxFragmentShader.glsl";
 	
 	private static final float ROTATION_SPEED = 0.5f;
 	
