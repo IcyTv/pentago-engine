@@ -20,9 +20,12 @@ public class Mouse {
 	
 	private static float xoffset;
 	private static float yoffset;
+
+	private static GLFWCursorPosCallback cursorCallback;
+	private static GLFWScrollCallback scrollCallback;
 	
 	public static void init() {
-		GLFW.glfwSetCursorPosCallback(DisplayManager.window, new GLFWCursorPosCallback() {
+		GLFW.glfwSetCursorPosCallback(DisplayManager.window, cursorCallback = new GLFWCursorPosCallback() {
 			@Override
 			public void invoke(long window, double xpos, double ypos) {
 				logger.info("Moved Cursor");
@@ -34,7 +37,7 @@ public class Mouse {
 			}
 		});
 		
-		GLFW.glfwSetScrollCallback(DisplayManager.window, new GLFWScrollCallback() {
+		GLFW.glfwSetScrollCallback(DisplayManager.window, scrollCallback = new GLFWScrollCallback() {
 			@Override
 			public void invoke(long window, double xoffset, double yoffset) {
 				logger.info("Scrolled");
@@ -67,4 +70,12 @@ public class Mouse {
 		return tmp;
 	}
 
+	public static void cleanUp() {
+		if(cursorCallback == null) {
+			return;
+		}
+		cursorCallback.free();
+		scrollCallback.free();
+	}
+	
 }

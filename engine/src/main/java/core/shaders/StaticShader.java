@@ -40,10 +40,12 @@ public class StaticShader extends ShaderProgram{
 
 	private int location_plane;
 	
+	private int location_sampler;
+	
 	public StaticShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
 	}
-
+	
 	@Override
 	protected void bindAttributes() {
 		super.bindAttribute(0, "position");
@@ -75,6 +77,8 @@ public class StaticShader extends ShaderProgram{
 		location_lightPos = new int[MAX_LIGHTS];
 		location_lightColor = new int[MAX_LIGHTS];
 		location_attenuation = new int[MAX_LIGHTS];
+		
+		location_sampler = super.getUniformLocation("textureSampler");
 		
 		for(int i = 0; i < MAX_LIGHTS; i++) {
 			location_lightPos[i] = super.getUniformLocation("lightPos[" + i + "]");
@@ -109,6 +113,7 @@ public class StaticShader extends ShaderProgram{
 	}
 
 	public void loadTransformationMatrix(Matrix4f matrix) {
+		super.loadInt(location_sampler, 0);
 		super.loadMatrix(location_transformationMatrix, matrix);
 	}
 	

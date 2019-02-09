@@ -27,11 +27,12 @@ import org.lwjgl.opengl.GL14;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
-import org.lwjgl.stb.STBImage;
 
 import core.models.ModelData;
 import core.models.RawModel;
 import core.textures.TextureData;
+import de.matthiasmann.twl.utils.PNGDecoder;
+import de.matthiasmann.twl.utils.PNGDecoder.Format;
 
 public abstract class Loader {
 	
@@ -77,6 +78,7 @@ public abstract class Loader {
 		int textureID = GL11.glGenTextures();
 		logger.info("textureId: " + textureID);
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL13.GL_TEXTURE_2D, textureID);
 		logger.info("Data");
 		TextureData data = decodeTextureFile("res/" + file + ".png");
 		logger.info("Connect data to texture");
@@ -115,23 +117,24 @@ public abstract class Loader {
 	}
 	
 	private static TextureData decodeTextureFile(String fileName) {
-		File f = new File(fileName);
 		ByteBuffer imageBuffer = null;
-        IntBuffer w = BufferUtils.createIntBuffer(1);
-        IntBuffer h = BufferUtils.createIntBuffer(1);
-        IntBuffer comp = BufferUtils.createIntBuffer(1);
-        try {
-        	if(!f.exists()) throw new IOException();
-        	
-        	imageBuffer = STBImage.stbi_load(f.toString(), w, h, comp, 4);
+		int width = 0;
+		int height = 0;
+		try {
+			FileInputStream in = new FileInputStream(fileName);
+			PNGDecoder decoder = new PNGDecoder(in);
+			width = decoder.getWidth();
+			height = decoder.getHeight();
+			imageBuffer = ByteBuffer.allocateDirect(4 * width * height);
+			decoder.decode(imageBuffer, width * 4, Format.RGBA);
+			imageBuffer.flip();
+			in.close();
+		} catch(IOException e){
+			logger.severe("Tried to load " + fileName);
+			logger.severe(e.getMessage());
+		}
+		return new TextureData(imageBuffer, width, height);
         
-        	if(imageBuffer==null)throw new IOException(STBImage.stbi_failure_reason());
-        } catch(IOException e) {
-        	logger.severe("Could not load file " + fileName);
-        	logger.severe(e.toString());
-        }
-        
-        return new TextureData(imageBuffer, w.get(), h.get());
 	}
 	
 	private static int createVAO() {

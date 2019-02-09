@@ -2,11 +2,22 @@ package core.renderEngine;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.glfw.GLFWWindowCloseCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
+
+import core.Callback;
+import core.inputs.Mouse;
+
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
 public class DisplayManager {
+
+	public static Logger logger = Logger.getLogger("Debug");
 	
 	public static final int WIDTH = 1280;
 	public static final int HEIGHT = 720;
@@ -16,8 +27,9 @@ public class DisplayManager {
 	
 	private static long lastFrameTime;
 	private static float delta;
+	private static GLFWWindowCloseCallback windowCloseCallback;
 	
-	public static void createDisplay() { 
+	public static void createDisplay() {
 		if(!GLFW.glfwInit()) {
 			// Throw an error.
 			System.err.println("GLFW initialization failed!");
@@ -29,6 +41,13 @@ public class DisplayManager {
 		if(window == NULL) {
 			GLFW.glfwTerminate();
 		}
+		
+		GLFW.glfwSetWindowCloseCallback(window, windowCloseCallback = new GLFWWindowCloseCallback() {
+			@Override
+			public void invoke(long window) {
+				DisplayManager.closeDisplay();
+			}});
+		
 		GLFWVidMode vidmode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
 		GLFW.glfwSetWindowPos(window, 100, 100);
 		GLFW.glfwMakeContextCurrent(window);
@@ -53,6 +72,10 @@ public class DisplayManager {
 	}
 	
 	public static void closeDisplay() {
+		logger.info("Closing window");
+		windowCloseCallback.free();
+		Mouse.cleanUp();
+		GL.setCapabilities(null);
 	}
 	
 	public static long getCurrentTime() {

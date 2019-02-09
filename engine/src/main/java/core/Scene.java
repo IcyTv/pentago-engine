@@ -45,7 +45,6 @@ public abstract class Scene {
 			}
 			sync(loopStart, tickrate);
 		}
-		System.out.println("Closing");
 		cleanUpEverything();
 	}
 	

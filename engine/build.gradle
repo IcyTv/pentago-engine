@@ -14,8 +14,8 @@ dependencies{
 		implementation 'org.lwjgl:lwjgl-glfw:' + version + app
 		implementation 'org.lwjgl:lwjgl:' + version + app
 		implementation 'org.lwjgl:lwjgl-openal:' + version + app
-		implementation 'org.lwjgl:lwjgl-stb:' + version + app
 	}
 	
 	implementation 'org.joml:joml-jdk8:1.9.12'
+	implementation 'org.l33tlabs.twl:pngdecoder:1.0'
 }

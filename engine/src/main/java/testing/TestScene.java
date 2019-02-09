@@ -77,11 +77,11 @@ public class TestScene extends Scene{
 		super.lights.add(sun);
 		logger.info("Texture");
 		
-		ModelTexture texture = new ModelTexture(Loader.loadTexture("entities/stallTexture"));
+		ModelTexture texture = new ModelTexture(Loader.loadTexture("entities/lamp"));
 		texture.setReflectivity(10f);
 		//texture.setFakeLighting(true);
 		logger.info("Model");
-		RawModel model = Loader.loadToVAO(OBJFileLoader.loadOBJ("entities/stall"));
+		RawModel model = Loader.loadToVAO(OBJFileLoader.loadOBJ("entities/lamp"));
 		TexturedModel texturedModel = new TexturedModel(model, texture);
 		Entity tmp = new Entity(texturedModel, new Vector3f(0, 0, -300), 0, 0, 0, 0.3f);
 		//AudioMaster.setDistanceAttenuationMethod(1, true);
@@ -125,7 +125,7 @@ public class TestScene extends Scene{
 	public static void main(String[] args) throws SecurityException, IOException {
 		
 		String loggingProperties = "handlers= java.util.logging.ConsoleHandler\r\n" + 
-		".level= WARNING\r\n" + 
+		".level=WARNING\r\n" + 
 		"java.util.logging.ConsoleHandler.level = INFO\r\n" + 
 		"java.util.logging.ConsoleHandler.formatter = java.util.logging.SimpleFormatter\r\n" + 
 		"java.util.logging.SimpleFormatter.format=[%1$tF %1$tT] [%4$-7s] %5$s %n";

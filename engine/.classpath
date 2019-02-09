@@ -68,21 +68,6 @@
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry sourcepath="/home/michael/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.2.1/50ac43d4c6ea5846f354f9576134c0f9264345c2/lwjgl-stb-3.2.1-sources.jar" kind="lib" path="/home/michael/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.2.1/31f5eb5fce3791d58ec898bc5c1867d76d781ba1/lwjgl-stb-3.2.1.jar">
-		<attributes>
-			<attribute name="gradle_used_by_scope" value="main,test"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry sourcepath="/home/michael/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.2.1/50ac43d4c6ea5846f354f9576134c0f9264345c2/lwjgl-stb-3.2.1-sources.jar" kind="lib" path="/home/michael/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.2.1/66e01b8036258619332cb452b970ca0a52db1a87/lwjgl-stb-3.2.1-natives-linux.jar">
-		<attributes>
-			<attribute name="gradle_used_by_scope" value="main,test"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry sourcepath="/home/michael/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.2.1/50ac43d4c6ea5846f354f9576134c0f9264345c2/lwjgl-stb-3.2.1-sources.jar" kind="lib" path="/home/michael/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl-stb/3.2.1/d100bfd2b0d03223a043cfcb64a2dfd2bb7f4c61/lwjgl-stb-3.2.1-natives-windows.jar">
-		<attributes>
-			<attribute name="gradle_used_by_scope" value="main,test"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry sourcepath="/home/michael/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl/3.2.1/106f90ac41449004a969309488aa6e3a2f7d6731/lwjgl-3.2.1-sources.jar" kind="lib" path="/home/michael/.gradle/caches/modules-2/files-2.1/org.lwjgl/lwjgl/3.2.1/2bb514e444994c6fece99a21f76e0c90438e377f/lwjgl-3.2.1.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
@@ -99,6 +84,11 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry sourcepath="/home/michael/.gradle/caches/modules-2/files-2.1/org.joml/joml-jdk8/1.9.12/e974529fe3daf00eebb733b7d675eb3054b653c3/joml-jdk8-1.9.12-sources.jar" kind="lib" path="/home/michael/.gradle/caches/modules-2/files-2.1/org.joml/joml-jdk8/1.9.12/a5ad90748e31d16d5126532e3f7c91a96a6742ff/joml-jdk8-1.9.12.jar">
+		<attributes>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry sourcepath="/home/michael/.gradle/caches/modules-2/files-2.1/org.l33tlabs.twl/pngdecoder/1.0/987473ad37e8e6cee43337bc1968a0614fe91571/pngdecoder-1.0-sources.jar" kind="lib" path="/home/michael/.gradle/caches/modules-2/files-2.1/org.l33tlabs.twl/pngdecoder/1.0/6422688e344db244da42244b21998284bf098948/pngdecoder-1.0.jar">
 		<attributes>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>

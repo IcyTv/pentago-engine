@@ -115,28 +115,21 @@ public class MasterRenderer {
 	}
 	
 	public void render(List<Light> lights, Camera camera, Vector4f clipPlane) {
-		logger.info("Preping");
+		logger.info("Rendering");
 		prepare();
-		logger.info("Starting shader");
 		shader.start();
 		if(clipPlane != null) {
 			shader.loadClipPlane(clipPlane);
 		}
-		logger.info("Loading lights");
 		shader.loadLights(lights);
-		logger.info("Loading view Matrix");
 		shader.loadViewMatrix(camera);
-		logger.info("Loading Sky color");
 		shader.loadSkyColor(SKY_RED, SKY_GREEN, SKY_BLUE);
 
-		logger.info("Rendering entities");
 		renderer.render(entities);
 
-		logger.info("Stopping shader");
 		shader.stop();
 		entities.clear();
 
-		logger.info("Rendering skybox");
 		skyboxRenderer.render(camera, SKY_RED, SKY_GREEN, SKY_BLUE);
 	}
 	

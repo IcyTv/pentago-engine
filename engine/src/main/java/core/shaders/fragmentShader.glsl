@@ -21,6 +21,12 @@ uniform float reflectivity;
 uniform vec3 skyColor;
 
 void main(void){
+	vec4 textureColor = texture(textureSampler, pass_textureCoords);
+	outCol = textureColor;
+	//outCol = vec4(surfaceNormal, 1.0);
+}
+
+void main2(void){
 	
 	vec3 unitNormal = normalize(surfaceNormal);
 	

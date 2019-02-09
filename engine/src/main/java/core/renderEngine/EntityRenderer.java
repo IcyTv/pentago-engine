@@ -63,6 +63,7 @@ public class EntityRenderer {
 		shader.loadFakeLighting(texture.usingFakeLighting());
 		
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		logger.info("Texture id: " + texture.getID());
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texturedModel.getTexture().getID());
 	}
 	
@@ -76,9 +77,9 @@ public class EntityRenderer {
 	
 	private void prepareInstance(Entity entity) {
 		Matrix4f transformationMatrix = Maths.createTransformationMatrix(entity.getPosition(), 
-				entity.getRotX(), 
-				entity.getRotY(), 
-				entity.getRotZ(), 
+				entity.getRotX(),
+				entity.getRotY(),
+				entity.getRotZ(),
 				entity.getScale());
 		
 		shader.loadTransformationMatrix(transformationMatrix);
