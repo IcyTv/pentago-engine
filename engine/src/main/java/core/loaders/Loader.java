@@ -29,8 +29,6 @@ import org.lwjgl.opengl.GL30;
 import core.models.ModelData;
 import core.models.RawModel;
 import core.textures.TextureData;
-import de.matthiasmann.twl.utils.PNGDecoder;
-import de.matthiasmann.twl.utils.PNGDecoder.Format;
 
 public abstract class Loader {
 	
@@ -119,35 +117,34 @@ public abstract class Loader {
 		ByteBuffer byteBuffer = null;
 		try {
 			FileInputStream in = new FileInputStream(fileName);
-			//BufferedImage decoder = ImageIO.read(in);
-			PNGDecoder decoder = new PNGDecoder(in);
+			BufferedImage decoder = ImageIO.read(in);
 			width = decoder.getWidth();
 			height = decoder.getHeight();
 			byteBuffer = ByteBuffer.allocateDirect(4 * width * height);
-//			DataBuffer dataBuffer = decoder.getData().getDataBuffer();
-//			if (dataBuffer instanceof DataBufferByte) {
-//			    byte[] pixelData = ((DataBufferByte) dataBuffer).getData();
-//			    byteBuffer = ByteBuffer.wrap(pixelData);
-//			}
-//			else if (dataBuffer instanceof DataBufferUShort) {
-//			    short[] pixelData = ((DataBufferUShort) dataBuffer).getData();
-//			    byteBuffer = ByteBuffer.allocate(pixelData.length * 2);
-//			    byteBuffer.asShortBuffer().put(ShortBuffer.wrap(pixelData));
-//			}
-//			else if (dataBuffer instanceof DataBufferShort) {
-//			    short[] pixelData = ((DataBufferShort) dataBuffer).getData();
-//			    byteBuffer = ByteBuffer.allocate(pixelData.length * 2);
-//			    byteBuffer.asShortBuffer().put(ShortBuffer.wrap(pixelData));
-//			}
-//			else if (dataBuffer instanceof DataBufferInt) {
-//			    int[] pixelData = ((DataBufferInt) dataBuffer).getData();
-//			    byteBuffer = ByteBuffer.allocate(pixelData.length * 4);
-//			    byteBuffer.asIntBuffer().put(IntBuffer.wrap(pixelData));
-//			}
-//			else {
-//			    throw new IllegalArgumentException("Not implemented for data buffer type: " + dataBuffer.getClass());
-//			}
-			decoder.decode(byteBuffer, width * 4, Format.RGBA);
+			DataBuffer dataBuffer = decoder.getData().getDataBuffer();
+			if (dataBuffer instanceof DataBufferByte) {
+			    byte[] pixelData = ((DataBufferByte) dataBuffer).getData();
+			    byteBuffer = ByteBuffer.wrap(pixelData);
+			}
+			else if (dataBuffer instanceof DataBufferUShort) {
+			    short[] pixelData = ((DataBufferUShort) dataBuffer).getData();
+			    byteBuffer = ByteBuffer.allocate(pixelData.length * 2);
+			    byteBuffer.asShortBuffer().put(ShortBuffer.wrap(pixelData));
+			}
+			else if (dataBuffer instanceof DataBufferShort) {
+			    short[] pixelData = ((DataBufferShort) dataBuffer).getData();
+			    byteBuffer = ByteBuffer.allocate(pixelData.length * 2);
+			    byteBuffer.asShortBuffer().put(ShortBuffer.wrap(pixelData));
+			}
+			else if (dataBuffer instanceof DataBufferInt) {
+			    int[] pixelData = ((DataBufferInt) dataBuffer).getData();
+			    byteBuffer = ByteBuffer.allocate(pixelData.length * 4);
+			    byteBuffer.asIntBuffer().put(IntBuffer.wrap(pixelData));
+			}
+			else {
+			    throw new IllegalArgumentException("Not implemented for data buffer type: " + dataBuffer.getClass());
+			}
+			//decoder.decode(byteBuffer, width * 4, Format.RGBA);
 			byteBuffer.flip();
 			in.close();
 		} catch (Exception e) {

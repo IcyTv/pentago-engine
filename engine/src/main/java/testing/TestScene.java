@@ -42,10 +42,10 @@ public class TestScene extends Scene{
 		Light sun = new Light(new Vector3f(0, 1000, -700), Maths.rgbToVector(255, 255, 255));
 		super.lights.add(sun);
 		
-		ModelTexture texture = new ModelTexture(Loader.loadTexture("entities/dragonTexture"));
+		ModelTexture texture = new ModelTexture(Loader.loadTexture("entities/stallTexture"));
 		texture.setReflectivity(10f);
 		//texture.setFakeLighting(true);
-		RawModel model = Loader.loadToVAO(OBJFileLoader.loadOBJ("entities/dragon"));
+		RawModel model = Loader.loadToVAO(OBJFileLoader.loadOBJ("entities/stall"));
 		TexturedModel texturedModel = new TexturedModel(model, texture);
 		Entity tmp = new Entity(texturedModel, new Vector3f(0, 0, -300), 0, 0, 0, 0.3f);
 		
@@ -77,11 +77,11 @@ public class TestScene extends Scene{
 		super.lights.add(sun);
 		logger.info("Texture");
 		
-		ModelTexture texture = new ModelTexture(Loader.loadTexture("entities/dragonTexture"));
+		ModelTexture texture = new ModelTexture(Loader.loadTexture("entities/stallTexture"));
 		texture.setReflectivity(10f);
 		//texture.setFakeLighting(true);
 		logger.info("Model");
-		RawModel model = Loader.loadToVAO(OBJFileLoader.loadOBJ("entities/dragon"));
+		RawModel model = Loader.loadToVAO(OBJFileLoader.loadOBJ("entities/stall"));
 		TexturedModel texturedModel = new TexturedModel(model, texture);
 		Entity tmp = new Entity(texturedModel, new Vector3f(0, 0, -300), 0, 0, 0, 0.3f);
 		//AudioMaster.setDistanceAttenuationMethod(1, true);
