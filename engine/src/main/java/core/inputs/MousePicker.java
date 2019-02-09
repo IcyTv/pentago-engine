@@ -1,4 +1,4 @@
-package core.controls;
+package core.inputs;
 
 import java.util.List;
 

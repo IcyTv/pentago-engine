@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.ConsoleHandler;
@@ -77,11 +78,11 @@ public class TestScene extends Scene{
 		super.lights.add(sun);
 		logger.info("Texture");
 		
-		ModelTexture texture = new ModelTexture(Loader.loadTexture("entities/dragonTexture"));
+		ModelTexture texture = new ModelTexture(Loader.loadTexture("entities/stallTexture"));
 		texture.setReflectivity(10f);
 		//texture.setFakeLighting(true);
 		logger.info("Model");
-		RawModel model = Loader.loadToVAO(OBJFileLoader.loadOBJ("entities/dragon"));
+		RawModel model = Loader.loadToVAO(OBJFileLoader.loadOBJ("entities/stall"));
 		TexturedModel texturedModel = new TexturedModel(model, texture);
 		Entity tmp = new Entity(texturedModel, new Vector3f(0, 0, -300), 0, 0, 0, 0.3f);
 		//AudioMaster.setDistanceAttenuationMethod(1, true);
@@ -138,6 +139,7 @@ public class TestScene extends Scene{
 		Handler ch = new ConsoleHandler();
 		ch.setFormatter(new SimpleFormatter());
 		logger.addHandler(ch);
+		
 		
 		
 		System.setProperty("org.lwjgl.util.Debug", "true");

@@ -11,13 +11,17 @@ import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferByte;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.logging.Logger;
@@ -124,10 +128,9 @@ public abstract class Loader {
 			FileInputStream in = new FileInputStream(filename);
 			bufferedImage = ImageIO.read(in);
 		} catch (IOException e) {
-			logger.severe("Image " + filename + "could not load");
+			logger.severe("Image " + filename + " could not load");
 			return null;
 		}
-		
 		
 		ByteBuffer imageBuffer;
 	    WritableRaster raster;
@@ -135,7 +138,8 @@ public abstract class Loader {
 
 	    ColorModel glAlphaColorModel = new ComponentColorModel(ColorSpace
 	            .getInstance(ColorSpace.CS_sRGB), new int[] { 8, 8, 8, 8 },
-	            true, false, Transparency.TRANSLUCENT, DataBuffer.TYPE_BYTE);
+	            true, false, Transparency.OPAQUE, DataBuffer.TYPE_BYTE);
+	    
 
 	    raster = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE,
 	            bufferedImage.getWidth(), bufferedImage.getHeight(), 4, null);
@@ -156,6 +160,9 @@ public abstract class Loader {
 	    imageBuffer = ByteBuffer.allocateDirect(data.length);
 	    imageBuffer.order(ByteOrder.nativeOrder());
 	    imageBuffer.put(data, 0, data.length);
+	    imageBuffer.flip();
+	    
+	    //imageBuffer = ByteBuffer.wrap(data);
 	    imageBuffer.flip();
 	    
 	    return new TextureData(imageBuffer, bufferedImage.getWidth(), bufferedImage.getHeight());

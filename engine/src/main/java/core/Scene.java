@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import core.audio.AudioMaster;
-import core.controls.MousePicker;
+import core.inputs.MousePicker;
 import core.entities.Camera;
 import core.entities.Entity;
 import core.entities.Light;
