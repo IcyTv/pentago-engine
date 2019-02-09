@@ -6,7 +6,6 @@ import org.lwjgl.glfw.GLFWWindowCloseCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
-import core.Callback;
 import core.inputs.Mouse;
 
 import static org.lwjgl.system.MemoryUtil.NULL;
