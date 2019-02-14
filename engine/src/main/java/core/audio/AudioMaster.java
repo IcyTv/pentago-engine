@@ -1,27 +1,54 @@
 package core.audio;
 
-import java.io.BufferedInputStream;
 import java.io.FileInputStream;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-//import org.lwjgl.LWJGLException;
-import org.lwjgl.openal.ALC;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
 import org.lwjgl.openal.AL11;
-//import org.lwjgl.util.WaveData;
+import org.lwjgl.openal.ALC;
+import org.lwjgl.openal.ALC10;
+import org.lwjgl.openal.ALC11;
+import org.lwjgl.openal.EXTEfx;
+import org.lwjgl.openal.ALCCapabilities;
 
 public class AudioMaster {
 
 	private static List<Integer> buffers;
+	private static long device;
 	
-	public static void init() {
+	public static void init() throws Exception {
 		buffers = new ArrayList<Integer>();
 		try {
-			//ALC.create();
+			device = ALC10.alcOpenDevice((ByteBuffer)null);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		ALCCapabilities deviceCaps = ALC.createCapabilities(device);
+		IntBuffer contextAttribList = BufferUtils.createIntBuffer(16);
+		contextAttribList.put(ALC10.ALC_REFRESH);
+		contextAttribList.put(60);
+		
+		contextAttribList.put(ALC10.ALC_SYNC);
+		contextAttribList.put(AL10.AL_FALSE);
+		
+		contextAttribList.put(EXTEfx.ALC_MAX_AUXILIARY_SENDS);
+		contextAttribList.put(2);
+		
+		contextAttribList.put(0);
+		contextAttribList.flip();
+		
+		long newContext= ALC10.alcCreateContext(device, contextAttribList);
+		if(!ALC10.alcMakeContextCurrent(newContext)) {
+			throw new Exception("Failed to make context current!");
+		}
+		
+		AL.createCapabilities(deviceCaps);
 	}
 	
 	public static void setListenerData(float x, float y, float z) {

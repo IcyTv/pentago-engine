@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.logging.LogManager;
 
 import org.joml.Vector3f;
-import org.lwjgl.opengl.GL11;
 
 import core.entities.Camera;
 import core.entities.Entity;

@@ -62,8 +62,9 @@ public class EntityRenderer {
 		
 		shader.loadFakeLighting(texture.usingFakeLighting());
 		
+		
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		//logger.warning("Texture id: " + texture.getID());
+		logger.info("Texture id: " + texture.getID());
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texturedModel.getTexture().getID());
 		shader.loadTexture(0);
 	}

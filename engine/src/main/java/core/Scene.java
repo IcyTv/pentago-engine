@@ -2,6 +2,7 @@ package core;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import core.audio.AudioMaster;
 import core.inputs.MousePicker;
@@ -13,7 +14,7 @@ import core.renderEngine.DisplayManager;
 import core.renderEngine.MasterRenderer;
 
 public abstract class Scene {
-	
+
 	protected List<Entity> entities;
 	protected List<Light> lights;
 	protected Camera camera;
@@ -22,7 +23,11 @@ public abstract class Scene {
 	protected int tickrate = 128;
 	
 	public Scene() {
-		AudioMaster.init();
+		try {
+			AudioMaster.init();
+		} catch (Exception e) {
+			Constants.logger.severe(e.getMessage());
+		}
 		entities = new ArrayList<Entity>();
 		lights = new ArrayList<Light>();
 		renderer = new MasterRenderer();

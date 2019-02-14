@@ -2,6 +2,7 @@ package core.entities;
 
 import org.joml.Vector3f;
 
+import core.Constants;
 import core.audio.Source;
 import core.models.TexturedModel;
 
@@ -37,7 +38,7 @@ public class Entity {
 		this.position.z += dz;
 		if(source != null) {
 			source.setPosition(this.position.x, this.position.y, this.position.z);
-			System.out.println("Source: " + this.position.x + " " + this.position.y + " " + this.position.z);
+			Constants.logger.info("Source: " + this.position.x + " " + this.position.y + " " + this.position.z);
 		}
 	}
 	

@@ -50,7 +50,7 @@ public class Camera {
 		calculateCamPos(horizontalDistance, verticalDistance);
 		yaw = 180-(angleAroundEntity);
 	
-		//AudioMaster.setListenerData(position.x, position.y, position.z);
+		AudioMaster.setListenerData(position.x, position.y, position.z);
 		//System.out.println(position.x + " " + position.y + " " + position.z);
 	}
 	

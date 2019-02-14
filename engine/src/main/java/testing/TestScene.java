@@ -19,6 +19,8 @@ import core.Constants;
 import core.Scene;
 import core.animation.Animation;
 import core.animation.AnimationEntity;
+import core.audio.AudioMaster;
+import core.audio.Source;
 import core.entities.Camera;
 import core.entities.Entity;
 import core.entities.Light;
@@ -78,22 +80,25 @@ public class TestScene extends Scene{
 		super.lights.add(sun);
 		logger.info("Texture");
 		
-		ModelTexture texture = new ModelTexture(Loader.loadTexture("entities/lamp"));
-		texture.setReflectivity(10f);
+		ModelTexture texture = new ModelTexture(Loader.loadTexture("entities/fern"));
+		//texture.setReflectivity(10f);
 		//texture.setFakeLighting(true);
+		texture.setTransparency(true);
 		logger.info("Model");
-		RawModel model = Loader.loadToVAO(OBJFileLoader.loadOBJ("entities/lamp"));
+		RawModel model = Loader.loadToVAO(OBJFileLoader.loadOBJ("entities/fern"));
 		TexturedModel texturedModel = new TexturedModel(model, texture);
 		Entity tmp = new Entity(texturedModel, new Vector3f(0, 0, -300), 0, 0, 0, 0.3f);
-		//AudioMaster.setDistanceAttenuationMethod(1, true);
+		AudioMaster.setDistanceAttenuationMethod(1, true);
 		
-		//Source source = new Source();
-//		source.setLooping(true);
-//		source.play(AudioMaster.loadSound("songMono"));
-//		source.setGain(1f);
-//		source.setAttenuationVariables(2f, 25, 500);
-//		
-//		tmp.connectSource(source);
+		Source source = new Source();
+		source.setLooping(true);
+		source.play(AudioMaster.loadSound("songMono"));
+		source.setGain(1f);
+		source.setAttenuationVariables(2f, 25, 500);
+		
+		source.play();
+		
+		tmp.connectSource(source);
 
 		logger.info("Camera");
 		super.camera = new Camera(tmp);
