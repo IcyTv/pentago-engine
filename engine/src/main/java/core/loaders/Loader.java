@@ -35,12 +35,15 @@ import org.lwjgl.opengl.GL14;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.stb.STBImage;
+import org.lwjgl.system.MemoryStack;
 
+import core.Constants;
 import core.models.ModelData;
 import core.models.RawModel;
 import core.textures.TextureData;
-import de.matthiasmann.twl.utils.PNGDecoder;
-import de.matthiasmann.twl.utils.PNGDecoder.Format;
+//import de.matthiasmann.twl.utils.PNGDecoder;
+//import de.matthiasmann.twl.utils.PNGDecoder.Format;
 
 public abstract class Loader {
 	
@@ -156,21 +159,29 @@ public abstract class Loader {
 		return textureID;
 	}
 	private static TextureData decodeTextureFile(String fileName) {
-		ByteBuffer imageBuffer = null;
+		File f = new File(fileName);
+		
 		int width = 0;
 		int height = 0;
+		ByteBuffer imageBuffer = null;
+		
 		try {
-			FileInputStream in = new FileInputStream(fileName);
-			PNGDecoder decoder = new PNGDecoder(in);
-			width = decoder.getWidth();
-			height = decoder.getHeight();
-			imageBuffer = ByteBuffer.allocateDirect(4 * width * height);
-			decoder.decode(imageBuffer, width * 4, Format.RGBA);
-			imageBuffer.flip();
-			in.close();
-		} catch(IOException e){
-			logger.severe("Tried to load " + fileName);
-			logger.severe(e.getMessage());
+			if(!f.exists()) throw new IOException();
+			try(MemoryStack stack = MemoryStack.stackPush()){
+				IntBuffer w = stack.mallocInt(1);
+				IntBuffer h = stack.mallocInt(1);
+				IntBuffer comp = stack.mallocInt(1);
+				
+				imageBuffer = STBImage.stbi_load(f.toString(), w, h, comp, 4);
+				
+				if(imageBuffer == null) throw new IOException();
+				
+				width = w.get();
+				height = h.get();		
+			}
+		} catch(IOException e) {
+			Constants.logger.severe("Texture " + fileName + " does not exist");
+			Constants.logger.severe(STBImage.stbi_failure_reason());
 		}
 		return new TextureData(imageBuffer, width, height);
 	}

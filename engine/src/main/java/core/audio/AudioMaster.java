@@ -21,7 +21,7 @@ public class AudioMaster {
 	private static List<Integer> buffers;
 	private static long device;
 	
-	public static void init() throws Exception {
+	public static void init() {
 		buffers = new ArrayList<Integer>();
 		try {
 			device = ALC10.alcOpenDevice((ByteBuffer)null);
@@ -45,7 +45,7 @@ public class AudioMaster {
 		
 		long newContext= ALC10.alcCreateContext(device, contextAttribList);
 		if(!ALC10.alcMakeContextCurrent(newContext)) {
-			throw new Exception("Failed to make context current!");
+			throw new RuntimeException("Failed to make context current!");
 		}
 		
 		AL.createCapabilities(deviceCaps);
