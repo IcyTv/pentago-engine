@@ -1,8 +1,8 @@
 package core.audio;
 
-import java.io.FileInputStream;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,9 +12,11 @@ import org.lwjgl.openal.AL10;
 import org.lwjgl.openal.AL11;
 import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALC10;
-import org.lwjgl.openal.ALC11;
-import org.lwjgl.openal.EXTEfx;
 import org.lwjgl.openal.ALCCapabilities;
+import org.lwjgl.openal.EXTEfx;
+import org.lwjgl.stb.STBVorbis;
+import org.lwjgl.stb.STBVorbisAlloc;
+import org.lwjgl.stb.STBVorbisInfo;
 
 public class AudioMaster {
 
@@ -57,24 +59,15 @@ public class AudioMaster {
 	}
 	
 	public static int loadSound(String file){
+		IntBuffer channels = BufferUtils.createIntBuffer(1);
+		IntBuffer sampleRate = BufferUtils.createIntBuffer(1);
+		ShortBuffer songBuffer = STBVorbis.stb_vorbis_decode_filename(file, channels, sampleRate);
+	    
+		if(songBuffer == null) throw new RuntimeException("Song " + file + " not found");
 		
-	    FileInputStream fin = null;
-	    //WaveData waveFile = null;
-	    try {
-	      fin = new FileInputStream("res/audio/" + file + ".wav");
-	      //waveFile = WaveData.create(new BufferedInputStream(fin));
-	    } catch (java.io.FileNotFoundException ex) {
-	      ex.printStackTrace();
-	    }
-	    finally {
-	      if(fin != null) {
-	        try{ fin.close(); }catch(java.io.IOException ex){}
-	      }
-	    }
 		int buffer = AL10.alGenBuffers();
 		buffers.add(buffer);
-		//AL10.alBufferData(buffer, waveFile.format, waveFile.data, waveFile.samplerate);
-		//waveFile.dispose();
+		AL10.alBufferData(buffer, AL10.AL_FORMAT_MONO16, songBuffer, sampleRate.get());
 		return buffer;
 	}
 	
