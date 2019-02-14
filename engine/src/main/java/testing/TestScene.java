@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.ConsoleHandler;
@@ -124,6 +125,8 @@ public class TestScene extends Scene{
 	
 	public static void main(String[] args) throws SecurityException, IOException {
 		
+		//RUN CONFIG FOR DEBUGGING PURPOSES: -javaagent:/home/michael/eclipse-workspace/engine/libs/debug/lwjglx-debug-1.0.0.jar
+		
 		String loggingProperties = "handlers= java.util.logging.ConsoleHandler\r\n" + 
 		".level=WARNING\r\n" + 
 		"java.util.logging.ConsoleHandler.level = INFO\r\n" + 
@@ -136,6 +139,7 @@ public class TestScene extends Scene{
 		Handler ch = new ConsoleHandler();
 		ch.setFormatter(new SimpleFormatter());
 		logger.addHandler(ch);
+		
 		
 		
 		System.setProperty("org.lwjgl.util.Debug", "true");

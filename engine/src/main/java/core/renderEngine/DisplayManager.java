@@ -10,8 +10,6 @@ import core.inputs.Mouse;
 
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
 public class DisplayManager {
@@ -26,7 +24,6 @@ public class DisplayManager {
 	
 	private static long lastFrameTime;
 	private static float delta;
-	private static GLFWWindowCloseCallback windowCloseCallback;
 	
 	public static void createDisplay() {
 		if(!GLFW.glfwInit()) {
@@ -40,12 +37,6 @@ public class DisplayManager {
 		if(window == NULL) {
 			GLFW.glfwTerminate();
 		}
-		
-		GLFW.glfwSetWindowCloseCallback(window, windowCloseCallback = new GLFWWindowCloseCallback() {
-			@Override
-			public void invoke(long window) {
-				DisplayManager.closeDisplay();
-			}});
 		
 		GLFWVidMode vidmode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
 		GLFW.glfwSetWindowPos(window, 100, 100);
@@ -72,9 +63,10 @@ public class DisplayManager {
 	
 	public static void closeDisplay() {
 		logger.info("Closing window");
-		windowCloseCallback.free();
-		Mouse.cleanUp();
-		GL.setCapabilities(null);
+		//GLFW.glfwDestroyWindow(window);
+		GLFW.glfwTerminate();
+		//Mouse.cleanUp();
+		//GL.setCapabilities(null);
 	}
 	
 	public static long getCurrentTime() {

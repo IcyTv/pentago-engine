@@ -18,10 +18,11 @@ import core.loaders.Loader;
 import core.loaders.OBJFileLoader;
 import core.models.RawModel;
 import core.models.TexturedModel;
-import core.controls.MousePicker;
 import core.renderEngine.DisplayManager;
 import core.renderEngine.MasterRenderer;
 import core.textures.ModelTexture;
+import core.inputs.Mouse;
+import core.inputs.MousePicker;
 //import tools.MousePicker;
 import tools.Maths;
 
@@ -32,6 +33,8 @@ public class EngineTester {
 		
 		RawModel model;
 		TexturedModel texturedModel;
+		
+		Mouse.init();
 		
 		List<Entity> entities = new ArrayList<Entity>();
 		ModelTexture texture;
@@ -52,10 +55,10 @@ public class EngineTester {
 		//List<GuiTexture> guis = new ArrayList<GuiTexture>();
 		//guis.add(new GuiTexture(fbos.getRefractionDepthTexture(), new Vector2f(0.5f, 0.5f), new Vector2f(0.5f, 0.5f)));
 		
-		texture = new ModelTexture(Loader.loadTexture("entities/dragonTexture"));
-		texture.setReflectivity(10f);
+		texture = new ModelTexture(Loader.loadTexture("entities/stallTexture"));
+		//texture.setReflectivity(10f);
 		//texture.setFakeLighting(true);
-		model = Loader.loadToVAO(OBJFileLoader.loadOBJ("entities/dragon"));
+		model = Loader.loadToVAO(OBJFileLoader.loadOBJ("entities/stall"));
 		texturedModel = new TexturedModel(model, texture);
 		Entity player = new Entity(texturedModel, new Vector3f(0, 0, -300), 0, 0, 0, 0.3f);
 		entities.add(player);
