@@ -33,6 +33,7 @@ public class DisplayManager {
 		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GL11.GL_FALSE);
 		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 4);
 		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 5);
+		GLFW.glfwWindowHint(GLFW.GLFW_SAMPLES, 4);
 		window = GLFW.glfwCreateWindow(WIDTH, HEIGHT, "Pentago", NULL, NULL);
 		if(window == NULL) {
 			GLFW.glfwTerminate();
@@ -64,7 +65,7 @@ public class DisplayManager {
 	public static void closeDisplay() {
 		logger.info("Closing window");
 		//GLFW.glfwDestroyWindow(window);
-		GLFW.glfwTerminate();
+		//GLFW.glfwTerminate();
 		//Mouse.cleanUp();
 		//GL.setCapabilities(null);
 	}

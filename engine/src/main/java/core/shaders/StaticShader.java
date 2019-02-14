@@ -113,7 +113,6 @@ public class StaticShader extends ShaderProgram{
 	}
 
 	public void loadTransformationMatrix(Matrix4f matrix) {
-		super.loadInt(location_sampler, 0);
 		super.loadMatrix(location_transformationMatrix, matrix);
 	}
 	
@@ -148,5 +147,9 @@ public class StaticShader extends ShaderProgram{
 	public void loadViewMatrix(Camera camera) {
 		Matrix4f viewMatrix = Maths.createViewMatrix(camera);
 		super.loadMatrix(location_viewMatrix, viewMatrix);
+	}
+
+	public void loadTexture(int i) {
+		super.loadInt(location_sampler, i);		
 	}
 }

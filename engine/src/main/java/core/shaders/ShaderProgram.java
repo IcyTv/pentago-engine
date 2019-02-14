@@ -77,14 +77,6 @@ public abstract class ShaderProgram {
 	
 	protected void loadMatrix(int location, Matrix4f value) {
 		value.get(matrixBuffer);
-		
-		//TEST FUNCTION FOR OUTPUTTING BUFFER
-		//while (matrixBuffer.hasRemaining())
-		//      System.out.println(matrixBuffer.position() + " -> " + matrixBuffer.get());
-
-		//matrixBuffer.flip();
-		
-		
 		GL20.glUniformMatrix4fv(location, false, matrixBuffer);
 	}
 	

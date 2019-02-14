@@ -109,7 +109,6 @@ public class TestScene extends Scene{
 		logger.info("Tick");
 		super.camera.move();
 		
-		GL11.glEnable(GL30.GL_CLIP_DISTANCE0);
 		Light.sort(super.lights, super.camera);
 		super.render();
 		

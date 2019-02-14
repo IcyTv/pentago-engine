@@ -31,26 +31,26 @@ uniform vec4 plane;
 void main(void){
 
 	vec4 worldPosition = transformationMatrix * vec4(position, 1.0);
-	
+
 	gl_ClipDistance[0] = dot(worldPosition, plane);
-	
+
 	vec4 posRelativeToCam = viewMatrix * worldPosition;
 
 	gl_Position = projectionMatrix * posRelativeToCam;
 	pass_textureCoords = (textureCoords / numOfRows) + offset;
-	
+
 	vec3 actualNormal = normal;
 	if(useFakeLighting > 0.0){
 		actualNormal = vec3(0.0, 1.0, 0.0);
 	}
-	
+
 	surfaceNormal = (transformationMatrix * vec4(actualNormal, 0.0)).xyz;
 	for(int i = 0; i < lightNum; i++){
-		toLightVector[i] = lightPos[i] - worldPosition.xyz;	
+		toLightVector[i] = lightPos[i] - worldPosition.xyz;
 	}
-	
+
 	toCameraVector = (inverse(viewMatrix) * vec4(0.0, 0.0, 0.0, 1.0)).xyz - worldPosition.xyz;
-	
+
 	float distance = length(posRelativeToCam.xyz);
 	visibility = exp(-pow(distance*density, gradient));
 	visibility = clamp(visibility, 0.0, 1.0);

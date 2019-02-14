@@ -85,15 +85,43 @@ public abstract class Loader {
 		logger.info("Loading texture");
 		int textureID = GL11.glGenTextures();
 		logger.info("textureId: " + textureID);
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		//GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL13.GL_TEXTURE_2D, textureID);
 		logger.info("Data");
 		TextureData data = decodeTextureFile("res/" + file + ".png");
-		logger.info("Connect data to texture");
-		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, data.getWidth(), data.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data.getBuffer());
+		
+		ByteBuffer byteBuffer = data.getBuffer();
+		byteBuffer.rewind();
+		byte[] buffer = new byte[byteBuffer.capacity()];
+		int n = 0;
+		while (n < byteBuffer.capacity()) {
+		  buffer[n] = byteBuffer.get(n + 0);
+		  buffer[n + 1] = byteBuffer.get(n + 1);
+		  buffer[n + 2] = byteBuffer.get(n + 2);
+		  buffer[n + 3] = byteBuffer.get(n + 3);
+		  n += 4;
+		}
+		byteBuffer.rewind();
+		BufferedImage img = new BufferedImage(data.getWidth(), data.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+		img.getRaster().setDataElements(0, 0, data.getWidth(), data.getHeight(), buffer);
+		try {
+			ImageIO.write(img, "PNG", new File("test.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		logger.info("Parameters");
+		GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
 		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, -0.7f);
+
+        //Setup wrap mode
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
+        
+		logger.info("Connect data to texture");
+		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, data.getWidth(), data.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data.getBuffer());
 		textures.add(textureID);
 		logger.info("Done loading");
 		return textureID;

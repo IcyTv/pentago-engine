@@ -48,7 +48,7 @@ public class MasterRenderer {
 	private static boolean cullingOn = false;
 	
 	public MasterRenderer() {
-		enableCulling();
+		//enableCulling();
 		
 		createProjectionMatrix();
 		renderer = new EntityRenderer(shader, projectionMatrix);
@@ -88,11 +88,15 @@ public class MasterRenderer {
 	}
 	
 	public static void enableCulling() {
-		if(!cullingOn) {
-			cullingOn = true;
-			GL11.glEnable(GL11.GL_CULL_FACE);
-			GL11.glCullFace(GL11.GL_BACK);
-		}
+		//BROKEN WITH 360 CAMERA
+		StackTraceElement[] cause = Thread.currentThread().getStackTrace();
+		logger.warning("Broken with 360 camera   Cause: " + cause[2]);
+		
+//		if(!cullingOn) {
+//			cullingOn = true;
+//			GL11.glEnable(GL11.GL_CULL_FACE);
+//			GL11.glCullFace(GL11.GL_BACK);
+//		}
 	}
 	
 	public static void disableCulling() {
@@ -148,7 +152,8 @@ public class MasterRenderer {
 	
 	public void prepare() {
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT|GL11.GL_DEPTH_BUFFER_BIT);
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+		GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 		GL11.glClearColor(SKY_RED, SKY_GREEN, SKY_BLUE, 1);
 	}
 	
