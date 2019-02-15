@@ -50,7 +50,9 @@ public class Camera {
 		calculateCamPos(horizontalDistance, verticalDistance);
 		yaw = 180-(angleAroundEntity);
 	
-		AudioMaster.setListenerData(position.x, position.y, position.z);
+		AudioMaster.setListenerDataPos(position.x, position.y, position.z);
+		Vector3f rotation = getRotation();
+		AudioMaster.setListenerDataRot(rotation.x, rotation.y, rotation.z);
 		//System.out.println(position.x + " " + position.y + " " + position.z);
 	}
 	
@@ -91,6 +93,14 @@ public class Camera {
 			float angleChange = Mouse.getDX() * 0.2f;
 			angleAroundEntity -= angleChange;
 		}
+	}
+	
+	public Vector3f getRotation() {
+		float tmp = (float)Math.cos(pitch);
+		float x = tmp * (float)Math.cos(yaw);
+		float y = (float)Math.sin(pitch);
+		float z = tmp * (float)Math.sin(-yaw);
+		return new Vector3f(x, y, z);
 	}
 	
 	public Vector3f getPosition() {

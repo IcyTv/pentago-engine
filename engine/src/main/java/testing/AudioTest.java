@@ -7,7 +7,7 @@ public class AudioTest {
 	public static void main(String[] args) throws Exception {
 		//System.setProperty("org.lwjgl.util.Debug", "true");
 		AudioMaster.init();
-		AudioMaster.setListenerData(0, 0, 0);
+		AudioMaster.setListenerDataPos(0, 0, 0);
 		
 		int buffer = AudioMaster.loadSound("bounce");
 		Source source = new Source();
