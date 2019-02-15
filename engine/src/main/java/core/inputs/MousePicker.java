@@ -1,19 +1,20 @@
-package core.inputs;
-
-import java.util.List;
-
-//import org.lwjgl.input.Mouse;
-import org.joml.Matrix4f;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
-
-import core.entities.Camera;
-import core.entities.Entity;
-import tools.Maths;
-
-public class MousePicker {
-
+//package core.inputs;
+//
+//import java.util.List;
+//
+////import org.lwjgl.input.Mouse;
+//import org.joml.Matrix4f;
+//import org.joml.Vector2f;
+//import org.joml.Vector3f;
+//import org.joml.Vector4f;
+//
+//import core.entities.Camera;
+//import core.entities.Entity;
+//import core.renderEngine.DisplayManager;
+//import tools.Maths;
+//
+//public class MousePicker {
+//
 //	private static final int RECURSION_COUNT = 200;
 //	private static final float RAY_RANGE = 600f;
 //	
@@ -77,8 +78,8 @@ public class MousePicker {
 //	}
 //	
 //	private Vector2f getNormalisedDeviceCoordinates(float mouseX, float mouseY) {
-//		float x = (2.0f * mouseX) / Display.getWidth() -1f;
-//		float y = (2.0f * mouseY) / Display.getHeight() -1f;
+//		float x = (2.0f * mouseX) / DisplayManager.getWidth() -1f;
+//		float y = (2.0f * mouseY) / DisplayManager.getHeight() -1f;
 //		return new Vector2f(x, y);
 //	}
 //	
@@ -123,7 +124,7 @@ public class MousePicker {
 //		Entity entity = getEntity(point);
 //		float height = 0;
 //		if(entity != null) {
-//			height = entity.getPosition().getY();
+//			height = entity.getPosition().y;
 //		}
 //		if(point.y < height) {
 //			return true;
@@ -152,4 +153,4 @@ public class MousePicker {
 //		}
 //		return (a.x - b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y) + (a.z-b.z)*(a.z-b.z);
 //	}
-}
+//}

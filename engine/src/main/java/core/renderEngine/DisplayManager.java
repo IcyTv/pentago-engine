@@ -2,7 +2,6 @@ package core.renderEngine;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.glfw.GLFWWindowCloseCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
@@ -19,7 +18,7 @@ public class DisplayManager {
 	
 	public static final int WIDTH = 1280;
 	public static final int HEIGHT = 720;
-	private static final int FPS_CAP = 120;
+	public static final int TICKRATE = 128;
 	
 	public static long window = NULL;
 	
@@ -42,6 +41,7 @@ public class DisplayManager {
 		if(window == NULL) {
 			GLFW.glfwTerminate();
 		}
+		GLFW.glfwSetWindowTitle(window, "Pentago");
 		
 		GLFWVidMode vidmode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
 		GLFW.glfwSetWindowPos(window, 100, 100);

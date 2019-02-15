@@ -1,10 +1,6 @@
 package testing;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL30;
-
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.ConsoleHandler;

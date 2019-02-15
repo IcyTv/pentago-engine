@@ -18,7 +18,6 @@ import core.entities.Entity;
 import core.entities.Light;
 import core.models.TexturedModel;
 import core.shaders.StaticShader;
-import testing.TestScene;
 import tools.Maths;
 
 public class MasterRenderer {

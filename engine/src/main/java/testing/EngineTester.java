@@ -1,19 +1,15 @@
 package testing;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 import core.entities.Camera;
 import core.entities.Entity;
 import core.entities.Light;
-import core.entities.LightedEntity;
 import core.loaders.Loader;
 import core.loaders.OBJFileLoader;
 import core.models.RawModel;
@@ -22,7 +18,6 @@ import core.renderEngine.DisplayManager;
 import core.renderEngine.MasterRenderer;
 import core.textures.ModelTexture;
 import core.inputs.Mouse;
-import core.inputs.MousePicker;
 //import tools.MousePicker;
 import tools.Maths;
 

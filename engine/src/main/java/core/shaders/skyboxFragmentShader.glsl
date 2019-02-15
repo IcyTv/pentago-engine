@@ -20,6 +20,8 @@ void main(void){
     float factor = (textureCoords.y - lowerLimit) / (upperLimit - lowerLimit);
     factor = clamp(factor, 0.0, 1.0);
     
-    //out_Color = texture1;
-    out_Color = mix(vec4(fogColor, 1.0), finalColor, factor);
+    out_Color = texture1;
+    
+    //Uncomment if fog wanted
+    //out_Color = mix(vec4(fogColor, 1.0), finalColor, factor);
 }

@@ -15,7 +15,6 @@ import core.models.RawModel;
 import core.models.TexturedModel;
 import core.shaders.StaticShader;
 import core.textures.ModelTexture;
-import testing.TestScene;
 import tools.Maths;
 
 public class EntityRenderer {

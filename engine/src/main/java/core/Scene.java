@@ -2,10 +2,8 @@ package core;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import core.audio.AudioMaster;
-import core.inputs.MousePicker;
 import core.entities.Camera;
 import core.entities.Entity;
 import core.entities.Light;
@@ -18,9 +16,8 @@ public abstract class Scene {
 	protected List<Entity> entities;
 	protected List<Light> lights;
 	protected Camera camera;
-	protected MousePicker picker;
+	//protected MousePicker picker;
 	protected MasterRenderer renderer;
-	protected int tickrate = 128;
 	
 	public Scene() {
 		try {
@@ -48,7 +45,7 @@ public abstract class Scene {
 			} else if(Constants.state == Constants.STATE.GAME) {
 				tickGame();
 			}
-			sync(loopStart, tickrate);
+			sync(loopStart, DisplayManager.TICKRATE);
 		}
 		cleanUpEverything();
 	}
