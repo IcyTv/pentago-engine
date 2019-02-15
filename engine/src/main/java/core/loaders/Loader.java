@@ -93,27 +93,6 @@ public abstract class Loader {
 		logger.info("Data");
 		TextureData data = decodeTextureFile("res/" + file + ".png");
 		
-		ByteBuffer byteBuffer = data.getBuffer();
-		byteBuffer.rewind();
-		byte[] buffer = new byte[byteBuffer.capacity()];
-		int n = 0;
-		while (n < byteBuffer.capacity()) {
-		  buffer[n] = byteBuffer.get(n + 0);
-		  buffer[n + 1] = byteBuffer.get(n + 1);
-		  buffer[n + 2] = byteBuffer.get(n + 2);
-		  buffer[n + 3] = byteBuffer.get(n + 3);
-		  n += 4;
-		}
-		byteBuffer.rewind();
-		BufferedImage img = new BufferedImage(data.getWidth(), data.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
-		img.getRaster().setDataElements(0, 0, data.getWidth(), data.getHeight(), buffer);
-		try {
-			ImageIO.write(img, "PNG", new File("test.png"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 		logger.info("Parameters");
 		GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
@@ -241,6 +220,33 @@ public abstract class Loader {
 		}
 		for(int texture: textures) {
 			GL11.glDeleteTextures(texture);
+		}
+	}
+	
+	/**
+	 * FOR DEBUGGING PURPOSES ONLY
+	 * 
+	 */
+	@SuppressWarnings("unused")
+	private void createPNGFromBuffer(ByteBuffer byteBuffer, String name, int width, int height) {
+		byteBuffer.rewind();
+		byte[] buffer = new byte[byteBuffer.capacity()];
+		int n = 0;
+		while (n < byteBuffer.capacity()) {
+		  buffer[n] = byteBuffer.get(n + 0);
+		  buffer[n + 1] = byteBuffer.get(n + 1);
+		  buffer[n + 2] = byteBuffer.get(n + 2);
+		  buffer[n + 3] = byteBuffer.get(n + 3);
+		  n += 4;
+		}
+		byteBuffer.rewind();
+		BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
+		img.getRaster().setDataElements(0, 0, width, height, buffer);
+		try {
+			ImageIO.write(img, "PNG", new File(name));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
