@@ -49,7 +49,7 @@ public class AudioMaster {
 		
 		long newContext= ALC10.alcCreateContext(device, contextAttribList);
 		if(!ALC10.alcMakeContextCurrent(newContext)) {
-			throw new RuntimeException("Failed to make context current!");
+			throw new RuntimeException("Failed to make AL context current!");
 		}
 		
 		AL.createCapabilities(deviceCaps);
@@ -61,7 +61,7 @@ public class AudioMaster {
 	}
 	
 	public static void setListenerDataRot(float x, float y ,float z) {
-		
+		AL10.alListener3f(AL10.AL_ORIENTATION, x, y, z);
 	}
 	
 	public static int loadSound(String file){

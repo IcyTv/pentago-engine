@@ -18,5 +18,6 @@ dependencies{
 	}
 	
 	implementation 'org.joml:joml-jdk8:1.9.12'
+	//Alternative image loader
 	//implementation 'org.l33tlabs.twl:pngdecoder:1.0'
 }
