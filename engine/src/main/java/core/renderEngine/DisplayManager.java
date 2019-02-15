@@ -6,6 +6,7 @@ import org.lwjgl.glfw.GLFWWindowCloseCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
+import core.audio.AudioMaster;
 import core.inputs.Mouse;
 
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -25,10 +26,13 @@ public class DisplayManager {
 	private static long lastFrameTime;
 	private static float delta;
 	
+	private static boolean clean = true;
+	
 	public static void createDisplay() {
+		clean = false;
 		if(!GLFW.glfwInit()) {
 			// Throw an error.
-			System.err.println("GLFW initialization failed!");
+			throw new RuntimeException("GLFW initialization failed!");
 		}
 		GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, GL11.GL_FALSE);
 		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -63,10 +67,13 @@ public class DisplayManager {
 	}
 	
 	public static void closeDisplay() {
+		if(clean) return;
 		logger.info("Closing window");
-		//GLFW.glfwDestroyWindow(window);
-		//GLFW.glfwTerminate();
-		//Mouse.cleanUp();
+		AudioMaster.cleanUp();
+		GLFW.glfwDestroyWindow(window);
+		GLFW.glfwTerminate();
+		clean = true;
+		Mouse.cleanUp();
 		//GL.setCapabilities(null);
 	}
 	

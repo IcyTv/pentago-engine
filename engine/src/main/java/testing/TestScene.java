@@ -93,7 +93,7 @@ public class TestScene extends Scene{
 		Source source = new Source();
 		source.setLooping(true);
 		source.play(AudioMaster.loadSound("res/audio/songMono.ogg"));
-		source.setGain(1f);
+		source.setGain(0.1f);
 		source.setAttenuationVariables(2f, 25, 500);
 		
 		source.play();

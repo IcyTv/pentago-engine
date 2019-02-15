@@ -15,15 +15,17 @@ import org.lwjgl.openal.ALC10;
 import org.lwjgl.openal.ALCCapabilities;
 import org.lwjgl.openal.EXTEfx;
 import org.lwjgl.stb.STBVorbis;
-import org.lwjgl.stb.STBVorbisAlloc;
-import org.lwjgl.stb.STBVorbisInfo;
+
+import core.Constants;
 
 public class AudioMaster {
 
 	private static List<Integer> buffers;
 	private static long device;
+	private static boolean clean = true;
 	
 	public static void init() {
+		clean = false;
 		buffers = new ArrayList<Integer>();
 		try {
 			device = ALC10.alcOpenDevice((ByteBuffer)null);
@@ -76,10 +78,13 @@ public class AudioMaster {
 	}
 	
 	public static void cleanUp() {
+		if(clean) return;
 		for(int buffer: buffers) {
 			AL10.alDeleteBuffers(buffer);
 		}
+		Constants.logger.warning("Finished cleaning up");
 		ALC.destroy();
+		clean = true;
 	}
 	
 	/**
