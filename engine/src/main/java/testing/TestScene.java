@@ -1,12 +1,12 @@
 package testing;
 
+//#region
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.LogManager;
-import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 import org.joml.Vector3f;
@@ -29,14 +29,23 @@ import core.renderEngine.DisplayManager;
 import core.textures.ModelTexture;
 import tools.Maths;
 
+//#endregion
+
+/**
+ * Scene for testing engine.
+ */
 public class TestScene extends Scene {
 
-	public static Logger logger = Logger.getLogger("Debug");
-
+	/**
+	 * Simple Constructor calling Super.
+	 */
 	public TestScene() {
 		super();
 	}
 
+	/**
+	 * Second test for animation.
+	 */
 	public void init2() {
 		Light sun = new Light(new Vector3f(0, 1000, -700), Maths.rgbToVector(255, 255, 255));
 		super.lights.add(sun);
@@ -69,20 +78,21 @@ public class TestScene extends Scene {
 	}
 
 	public void init() {
-		logger.info("Init");
+		Constants.logger.info("Init");
 		Mouse.init();
 		Light sun = new Light(new Vector3f(0, 1000, -700), Maths.rgbToVector(255, 255, 255));
 		super.lights.add(sun);
-		logger.info("Texture");
-
+		Constants.logger.info("Texture");
+/* 
 		ModelTexture texture = new ModelTexture(Loader.loadTexture("entities/fern"));
 		// texture.setReflectivity(10f);
 		// texture.setFakeLighting(true);
 		texture.setTransparency(true);
-		logger.info("Model");
+		Constants.logger.info("Model");
 		RawModel model = Loader.loadToVAO(OBJFileLoader.loadOBJ("entities/fern"));
-		TexturedModel texturedModel = new TexturedModel(model, texture);
-		Entity tmp = new Entity(texturedModel, new Vector3f(0, 0, -300), 0, 0, 0, 0.3f);
+		TexturedModel texturedModel = new TexturedModel(model, texture); */
+		//Entity tmp = new Entity(texturedModel, new Vector3f(0, 0, -300), 0, 0, 0, 0.3f);
+		Entity tmp = new Entity("fern", new Vector3f(0,0,0), 0.3f);
 		AudioMaster.setDistanceAttenuationMethod(1, true);
 
 		Source source = new Source();
@@ -95,17 +105,17 @@ public class TestScene extends Scene {
 
 		tmp.connectSource(source);
 
-		logger.info("Camera");
+		Constants.logger.info("Camera");
 		super.camera = new Camera(tmp);
 
 		super.entities.add(tmp);
-		logger.info("Done with init()");
+		Constants.logger.info("Done with init()");
 	}
 
 	@Override
 	public void tickGame() {
-		// logger.info(Constants.state);
-		logger.info("Tick");
+		// Constants.logger.info(Constants.state);
+		Constants.logger.info("Tick");
 		super.camera.move();
 
 		Light.sort(super.lights, super.camera);
@@ -115,7 +125,6 @@ public class TestScene extends Scene {
 
 	@Override
 	public void tickMenu() {
-		// TODO Auto-generated method stub
 	}
 
 	// Static methods
@@ -133,19 +142,19 @@ public class TestScene extends Scene {
 		LogManager.getLogManager()
 				.readConfiguration(new ByteArrayInputStream(loggingProperties.getBytes(StandardCharsets.UTF_8)));
 
-		logger.setUseParentHandlers(false);
+		Constants.logger.setUseParentHandlers(false);
 		Handler ch = new ConsoleHandler();
 		ch.setFormatter(new SimpleFormatter());
-		logger.addHandler(ch);
+		Constants.logger.addHandler(ch);
 
 		System.setProperty("org.lwjgl.util.Debug", "true");
-		logger.info("Creating Display");
+		Constants.logger.info("Creating Display");
 		DisplayManager.createDisplay();
-		logger.info("Done");
+		Constants.logger.info("Done");
 		Constants.state = Constants.STATE.GAME;
 		TestScene scene = new TestScene();
 		scene.start();
-		logger.info("Closing display");
+		Constants.logger.info("Closing display");
 		DisplayManager.closeDisplay();
 	}
 

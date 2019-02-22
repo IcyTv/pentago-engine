@@ -4,7 +4,11 @@ import org.joml.Vector3f;
 
 import core.Constants;
 import core.audio.Source;
+import core.loaders.Loader;
+import core.loaders.OBJFileLoader;
+import core.models.RawModel;
 import core.models.TexturedModel;
+import core.textures.ModelTexture;
 
 public class Entity {
 
@@ -29,6 +33,20 @@ public class Entity {
 		this.rotZ = rotZ;
 		this.scale = scale;
 		this.textureIndex = textureIndex;
+		source = null;
+	}
+
+	public Entity(String fileName, Vector3f position, float scale){
+		
+		ModelTexture texture = new ModelTexture(Loader.loadTexture("entities/" + fileName));
+		RawModel model = Loader.loadToVAO(OBJFileLoader.loadOBJ("entities/" + fileName));
+		this.model = new TexturedModel(model, texture);
+		this.position = position;
+		this.rotX = 0;
+		this.rotY = 0;
+		this.rotZ = 0;
+		this.scale = scale;
+		this.textureIndex = 0;
 		source = null;
 	}
 	

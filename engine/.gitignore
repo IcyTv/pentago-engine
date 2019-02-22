@@ -53,4 +53,6 @@ gradle-app.setting
 /bin/
 
 ## VSCODE ##
-launch.json
+.settings/
+.project
+.classpath

@@ -230,7 +230,6 @@ public abstract class Loader {
 		try {
 			ImageIO.write(img, "PNG", new File(name));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

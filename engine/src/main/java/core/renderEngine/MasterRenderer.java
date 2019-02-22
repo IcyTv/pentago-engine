@@ -44,8 +44,6 @@ public class MasterRenderer {
 	
 	private Map<TexturedModel, List<Entity>> entities = new HashMap<TexturedModel, List<Entity>>();
 	
-	private static boolean cullingOn = false;
-	
 	public MasterRenderer() {
 		//enableCulling();
 		
@@ -77,30 +75,12 @@ public class MasterRenderer {
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
 	public void playAnimation(Animation animation, List<Light> lights) {
 		playAnimation(animation, lights, null);
-	}
-	
-	public static void enableCulling() {
-		//BROKEN WITH 360 CAMERA
-		StackTraceElement[] cause = Thread.currentThread().getStackTrace();
-		logger.warning("Broken with 360 camera   Cause: " + cause[2]);
-		
-//		if(!cullingOn) {
-//			cullingOn = true;
-//			GL11.glEnable(GL11.GL_CULL_FACE);
-//			GL11.glCullFace(GL11.GL_BACK);
-//		}
-	}
-	
-	public static void disableCulling() {
-		cullingOn = false;
-		GL11.glDisable(GL11.GL_CULL_FACE);
 	}
 	
 	public void renderScene(List<Entity> entities, List<Light> lights, Camera camera, Vector4f clipPlane) {

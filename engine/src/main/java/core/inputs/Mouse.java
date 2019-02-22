@@ -57,6 +57,10 @@ public class Mouse {
 		return GLFW.glfwGetMouseButton(DisplayManager.window, GLFW.GLFW_MOUSE_BUTTON_1 + i) == 1;
 	}
 
+	public static float getXOffset(){
+		return xoffset;
+	}
+
 	public static float getDY() {
 		float tmp = dy;
 		dy = 0;

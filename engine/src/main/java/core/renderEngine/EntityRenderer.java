@@ -55,10 +55,6 @@ public class EntityRenderer {
 		shader.loadNumberOfRows(texturedModel.getTexture().getRows());
 		shader.loadShineVariables(texture.getShineDamper(), texture.getReflectivity());
 		
-		if(texture.hasTransparency()) {
-			MasterRenderer.disableCulling();
-		}
-		
 		shader.loadFakeLighting(texture.usingFakeLighting());
 		
 		

@@ -1,0 +1,49 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Debug (Launch) - Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Animation<engine>",
+            "request": "launch",
+            "mainClass": "core.animation.Animation",
+            "projectName": "engine"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-AudioTest<engine>",
+            "request": "launch",
+            "mainClass": "testing.AudioTest",
+            "projectName": "engine"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-EngineTester<engine>",
+            "request": "launch",
+            "mainClass": "testing.EngineTester",
+            "projectName": "engine"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-SimpleTest<engine>",
+            "request": "launch",
+            "mainClass": "testing.SimpleTest",
+            "projectName": "engine"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-TestScene<engine>",
+            "request": "launch",
+            "mainClass": "testing.TestScene",
+            "projectName": "engine"
+        }
+    ]
+}
