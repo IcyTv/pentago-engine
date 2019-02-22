@@ -21,6 +21,7 @@ import core.entities.Camera;
 import core.entities.Entity;
 import core.entities.Light;
 import core.inputs.Mouse;
+import core.inputs.MousePicker;
 import core.loaders.Loader;
 import core.loaders.OBJFileLoader;
 import core.models.RawModel;
@@ -35,6 +36,8 @@ import tools.Maths;
  * Scene for testing engine.
  */
 public class TestScene extends Scene {
+
+	private MousePicker picker;
 
 	/**
 	 * Simple Constructor calling Super.
@@ -93,6 +96,7 @@ public class TestScene extends Scene {
 		TexturedModel texturedModel = new TexturedModel(model, texture); */
 		//Entity tmp = new Entity(texturedModel, new Vector3f(0, 0, -300), 0, 0, 0, 0.3f);
 		Entity tmp = new Entity("fern", new Vector3f(0,0,0), 0.3f);
+		Constants.logger.warning(Boolean.toString(tmp.inside(new Vector3f(0.1f, 0.1f, 0.1f))));
 		AudioMaster.setDistanceAttenuationMethod(1, true);
 
 		Source source = new Source();
@@ -110,6 +114,7 @@ public class TestScene extends Scene {
 
 		super.entities.add(tmp);
 		Constants.logger.info("Done with init()");
+		picker = new MousePicker(camera, );
 	}
 
 	@Override

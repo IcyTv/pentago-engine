@@ -81,6 +81,15 @@ public class Entity {
 		return source;
 	}
 	
+	public boolean inside(Vector3f point){
+		return point.x > position.x         &&
+			   point.x < position.x + scale &&
+			   point.y > position.y 		&&
+			   point.y < position.y + scale &&
+			   point.z > position.z			&&
+			   point.z < position.z + scale;
+	}
+
 	public float getXOffset() {
 		int column = textureIndex % model.getTexture().getRows();
 		return (float) column / (float) model.getTexture().getRows(); 

@@ -46,6 +46,14 @@ public class Mouse {
 		});
 	}
 
+	public static float getX(){
+		return x;
+	}
+
+	public static float getY(){
+		return y;
+	}
+
 	public static float getDWheel() {
 		float tmp = yoffset;
 		yoffset = 0;
