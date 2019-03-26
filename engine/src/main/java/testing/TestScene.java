@@ -86,16 +86,16 @@ public class TestScene extends Scene {
 		Light sun = new Light(new Vector3f(0, 1000, -700), Maths.rgbToVector(255, 255, 255));
 		super.lights.add(sun);
 		Constants.logger.info("Texture");
-/* 
-		ModelTexture texture = new ModelTexture(Loader.loadTexture("entities/fern"));
-		// texture.setReflectivity(10f);
-		// texture.setFakeLighting(true);
-		texture.setTransparency(true);
-		Constants.logger.info("Model");
-		RawModel model = Loader.loadToVAO(OBJFileLoader.loadOBJ("entities/fern"));
-		TexturedModel texturedModel = new TexturedModel(model, texture); */
-		//Entity tmp = new Entity(texturedModel, new Vector3f(0, 0, -300), 0, 0, 0, 0.3f);
-		Entity tmp = new Entity("fern", new Vector3f(0,0,0), 0.3f);
+		/*
+		 * ModelTexture texture = new ModelTexture(Loader.loadTexture("entities/fern"));
+		 * // texture.setReflectivity(10f); // texture.setFakeLighting(true);
+		 * texture.setTransparency(true); Constants.logger.info("Model"); RawModel model
+		 * = Loader.loadToVAO(OBJFileLoader.loadOBJ("entities/fern")); TexturedModel
+		 * texturedModel = new TexturedModel(model, texture);
+		 */
+		// Entity tmp = new Entity(texturedModel, new Vector3f(0, 0, -300), 0, 0, 0,
+		// 0.3f);
+		Entity tmp = new Entity("fern", new Vector3f(0, 0, 0), 0.3f);
 		Constants.logger.warning(Boolean.toString(tmp.inside(new Vector3f(0.1f, 0.1f, 0.1f))));
 		AudioMaster.setDistanceAttenuationMethod(1, true);
 
@@ -114,7 +114,7 @@ public class TestScene extends Scene {
 
 		super.entities.add(tmp);
 		Constants.logger.info("Done with init()");
-		picker = new MousePicker(camera, );
+		// picker = new MousePicker(camera, );
 	}
 
 	@Override

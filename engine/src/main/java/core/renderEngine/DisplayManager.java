@@ -1,15 +1,15 @@
 package core.renderEngine;
 
+import static org.lwjgl.system.MemoryUtil.NULL;
+
+import java.util.logging.Logger;
+
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
 import core.audio.AudioMaster;
 import core.inputs.Mouse;
-
-import static org.lwjgl.system.MemoryUtil.NULL;
-
-import java.util.logging.Logger;
 
 public class DisplayManager {
 
@@ -37,8 +37,11 @@ public class DisplayManager {
 		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 5);
 		GLFW.glfwWindowHint(GLFW.GLFW_SAMPLES, 4);
 		window = GLFW.glfwCreateWindow(WIDTH, HEIGHT, "Pentago", NULL, NULL);
+		System.out.println(window);
 		if (window == NULL) {
 			GLFW.glfwTerminate();
+			System.err.println("Window failed to load");
+			System.exit(-1);
 		}
 		GLFW.glfwSetWindowTitle(window, "Pentago");
 
