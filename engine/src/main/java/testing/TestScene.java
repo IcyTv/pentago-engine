@@ -13,21 +13,13 @@ import org.joml.Vector3f;
 
 import core.Constants;
 import core.Scene;
-import core.animation.Animation;
-import core.animation.AnimationEntity;
 import core.audio.AudioMaster;
-import core.audio.Source;
 import core.entities.Camera;
 import core.entities.Entity;
 import core.entities.Light;
-import core.inputs.Mouse;
-import core.inputs.MousePicker;
-import core.loaders.Loader;
-import core.loaders.OBJFileLoader;
-import core.models.RawModel;
-import core.models.TexturedModel;
+import core.event.KeyEvent;
+import core.inputs.Keyboard;
 import core.renderEngine.DisplayManager;
-import core.textures.ModelTexture;
 import tools.Maths;
 
 //#endregion
@@ -37,7 +29,7 @@ import tools.Maths;
  */
 public class TestScene extends Scene {
 
-	private MousePicker picker;
+	private int current = 0;
 
 	/**
 	 * Simple Constructor calling Super.
@@ -46,43 +38,8 @@ public class TestScene extends Scene {
 		super();
 	}
 
-	/**
-	 * Second test for animation.
-	 */
-	public void init2() {
-		Light sun = new Light(new Vector3f(0, 1000, -700), Maths.rgbToVector(255, 255, 255));
-		super.lights.add(sun);
-
-		ModelTexture texture = new ModelTexture(Loader.loadTexture("entities/stallTexture"));
-		texture.setReflectivity(10f);
-		// texture.setFakeLighting(true);
-		RawModel model = Loader.loadToVAO(OBJFileLoader.loadOBJ("entities/stall"));
-		TexturedModel texturedModel = new TexturedModel(model, texture);
-		Entity tmp = new Entity(texturedModel, new Vector3f(0, 0, -300), 0, 0, 0, 0.3f);
-
-		Constants.state = Constants.STATE.CUTSCENE;
-
-		super.camera = new Camera();
-
-		Animation animation = new Animation(20);
-
-		AnimationEntity cam = animation.addCamera(super.camera);
-		AnimationEntity dragon = animation.addEntity(tmp);
-
-		animation.addKeyframe(0, new Vector3f(0, 0, 0), cam);
-		animation.addKeyframe(19, new Vector3f(10, 10, 10), cam);
-		animation.addKeyframe(0, new Vector3f(-1, -1, -1), dragon);
-		animation.addKeyframe(19, new Vector3f(-20, 10, -20), dragon);
-
-		animation.finalize();
-		super.renderer.playAnimation(animation, super.lights);
-
-		Constants.state = Constants.STATE.GAME;
-	}
-
 	public void init() {
 		Constants.logger.info("Init");
-		Mouse.init();
 		Light sun = new Light(new Vector3f(0, 1000, -700), Maths.rgbToVector(255, 255, 255));
 		super.lights.add(sun);
 		Constants.logger.info("Texture");
@@ -95,24 +52,23 @@ public class TestScene extends Scene {
 		 */
 		// Entity tmp = new Entity(texturedModel, new Vector3f(0, 0, -300), 0, 0, 0,
 		// 0.3f);
-		Entity tmp = new Entity("fern", new Vector3f(0, 0, 0), 0.3f);
-		Constants.logger.warning(Boolean.toString(tmp.inside(new Vector3f(0.1f, 0.1f, 0.1f))));
+		Entity entity = new Entity("fern", new Vector3f(0, 0, 0), 0.3f);
 		AudioMaster.setDistanceAttenuationMethod(1, true);
 
-		Source source = new Source();
-		source.setLooping(true);
-		source.play(AudioMaster.loadSound("res/audio/songMono.ogg"));
-		source.setGain(0.1f);
-		source.setAttenuationVariables(2f, 25, 500);
+		// Source source = new Source();
+		// source.setLooping(true);
+		// source.play(AudioMaster.loadSound("res/audio/songMono.ogg"));
+		// source.setGain(0.1f);
+		// source.setAttenuationVariables(2f, 25, 500);
 
-		source.play();
+		// source.play();
 
-		tmp.connectSource(source);
+		// tmp.connectSource(source);
 
 		Constants.logger.info("Camera");
-		super.camera = new Camera(tmp);
+		super.camera = new Camera(entity);
 
-		super.entities.add(tmp);
+		super.entities.add(entity);
 		Constants.logger.info("Done with init()");
 		// picker = new MousePicker(camera, );
 	}
@@ -130,6 +86,33 @@ public class TestScene extends Scene {
 
 	@Override
 	public void tickMenu() {
+	}
+
+	@Override
+	public void onKey(KeyEvent ev, boolean press) {
+		Entity entity = super.entities.get(current);
+		if (press) {
+			switch (Keyboard.toCharacter(ev.getKey())) {
+			case "ARROW_LEFT":
+				entity.increasePosition(1, 0, 0);
+				break;
+			case "ARROW_RIGHT":
+				entity.increasePosition(-1, 0, 0);
+				break;
+			case "ARROW_UP":
+				entity.increasePosition(0, 0, 1);
+				break;
+			case "ARROW_DOWN":
+				entity.increasePosition(0, 0, -1);
+				break;
+			case "ENTER":
+				super.entities.add(new Entity("fern", new Vector3f(0, 0, 0), 0.3f));
+				current++;
+				break;
+			default:
+				System.out.println(Keyboard.toCharacter(ev.getKey()));
+			}
+		}
 	}
 
 	// Static methods

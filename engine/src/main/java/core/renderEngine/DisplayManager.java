@@ -4,6 +4,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.util.logging.Logger;
 
+import org.lwjgl.PointerBuffer;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
@@ -37,9 +38,11 @@ public class DisplayManager {
 		GLFW.glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 5);
 		GLFW.glfwWindowHint(GLFW.GLFW_SAMPLES, 4);
 		window = GLFW.glfwCreateWindow(WIDTH, HEIGHT, "Pentago", NULL, NULL);
-		System.out.println(window);
 		if (window == NULL) {
+			PointerBuffer description = PointerBuffer.allocateDirect(1000);
+			GLFW.glfwGetError(description);
 			GLFW.glfwTerminate();
+			System.err.println(description.get());
 			System.err.println("Window failed to load");
 			System.exit(-1);
 		}

@@ -44,7 +44,8 @@
             "name": "Debug (Launch)-TestScene<engine>",
             "request": "launch",
             "mainClass": "testing.TestScene",
-            "projectName": "engine"
+            "projectName": "engine",
+            "cwd": "${workspaceFolder}/engine"
         }
     ]
 }
