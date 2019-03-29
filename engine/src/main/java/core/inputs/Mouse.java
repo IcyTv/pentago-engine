@@ -1,16 +1,18 @@
 package core.inputs;
 
-import java.util.logging.Logger;
+import java.util.Stack;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
+import org.lwjgl.glfw.GLFWMouseButtonCallback;
 import org.lwjgl.glfw.GLFWScrollCallback;
 
+import core.event.Callback;
+import core.event.CallbackStackInterruption;
+import core.event.MouseClickedEvent;
 import core.renderEngine.DisplayManager;
 
 public class Mouse {
-
-	public static Logger logger = Logger.getLogger("Debug");
 
 	private static float x;
 	private static float y;
@@ -22,12 +24,17 @@ public class Mouse {
 
 	private static GLFWCursorPosCallback cursorCallback;
 	private static GLFWScrollCallback scrollCallback;
+	private static GLFWMouseButtonCallback clickCallback;
+
+	private static Stack<Callback> callbacks;
 
 	public static void init() {
+
+		callbacks = new Stack<Callback>();
+
 		GLFW.glfwSetCursorPosCallback(DisplayManager.window, cursorCallback = new GLFWCursorPosCallback() {
 			@Override
 			public void invoke(long window, double xpos, double ypos) {
-				logger.info("Moved Cursor");
 				Mouse.dx = -(Mouse.x - (float) xpos);
 				Mouse.dy = (Mouse.y - (float) ypos);
 
@@ -39,18 +46,44 @@ public class Mouse {
 		GLFW.glfwSetScrollCallback(DisplayManager.window, scrollCallback = new GLFWScrollCallback() {
 			@Override
 			public void invoke(long window, double xoffset, double yoffset) {
-				logger.info("Scrolled");
 				Mouse.xoffset = (float) xoffset;
 				Mouse.yoffset = (float) yoffset;
 			}
 		});
+
+		GLFW.glfwSetMouseButtonCallback(DisplayManager.window, clickCallback = new GLFWMouseButtonCallback() {
+
+			@Override
+			public void invoke(long window, int button, int action, int mods) {
+				for (Callback c : callbacks) {
+					try {
+						c.invoke(new MouseClickedEvent(Mouse.x, Mouse.y, button, action));
+					} catch (CallbackStackInterruption e) {
+						break;
+					}
+				}
+			}
+		});
+
 	}
 
-	public static float getX(){
+	public static void addCallback(Callback c) {
+		Stack<Callback> tmpCallStack = new Stack<Callback>();
+
+		while (!callbacks.empty() && tmpCallStack.peek().priority() < c.priority()) {
+			tmpCallStack.push(callbacks.pop());
+		}
+		callbacks.push(c);
+		while (!tmpCallStack.empty()) {
+			callbacks.push(tmpCallStack.pop());
+		}
+	}
+
+	public static float getX() {
 		return x;
 	}
 
-	public static float getY(){
+	public static float getY() {
 		return y;
 	}
 
@@ -65,7 +98,7 @@ public class Mouse {
 		return GLFW.glfwGetMouseButton(DisplayManager.window, GLFW.GLFW_MOUSE_BUTTON_1 + i) == 1;
 	}
 
-	public static float getXOffset(){
+	public static float getXOffset() {
 		return xoffset;
 	}
 
@@ -85,8 +118,9 @@ public class Mouse {
 		if (cursorCallback == null) {
 			return;
 		}
-		cursorCallback.free();
-		scrollCallback.free();
+		// cursorCallback.free();
+		// scrollCallback.free();
+		// clickCallback.free();
 	}
 
 }

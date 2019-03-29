@@ -16,8 +16,6 @@ import org.lwjgl.openal.ALCCapabilities;
 import org.lwjgl.openal.EXTEfx;
 import org.lwjgl.stb.STBVorbis;
 
-import core.Constants;
-
 public class AudioMaster {
 
 	private static List<Integer> buffers;
@@ -84,7 +82,6 @@ public class AudioMaster {
 		for (int buffer : buffers) {
 			AL10.alDeleteBuffers(buffer);
 		}
-		Constants.logger.info("Finished cleaning up");
 		ALC10.alcDestroyContext(ALC10.alcGetCurrentContext());
 		ALC10.alcCloseDevice(device);
 		ALC.destroy();

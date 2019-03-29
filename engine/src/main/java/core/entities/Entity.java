@@ -2,7 +2,6 @@ package core.entities;
 
 import org.joml.Vector3f;
 
-import core.Constants;
 import core.audio.Source;
 import core.loaders.Loader;
 import core.loaders.OBJFileLoader;
@@ -16,6 +15,7 @@ public class Entity {
 	private Vector3f position;
 	private float rotX, rotY, rotZ;
 	private float scale;
+	private boolean hidden;
 
 	private Source source;
 
@@ -34,7 +34,8 @@ public class Entity {
 		this.rotZ = rotZ;
 		this.scale = scale;
 		this.textureIndex = textureIndex;
-		source = null;
+		this.hidden = false;
+		this.source = null;
 	}
 
 	public Entity(String fileName, Vector3f position, float scale) {
@@ -57,7 +58,6 @@ public class Entity {
 		this.position.z += dz;
 		if (source != null) {
 			source.setPosition(this.position.x, this.position.y, this.position.z);
-			Constants.logger.info("Source: " + this.position.x + " " + this.position.y + " " + this.position.z);
 		}
 	}
 
@@ -148,6 +148,23 @@ public class Entity {
 
 	public void setScale(float scale) {
 		this.scale = scale;
+	}
+
+	public void setHidden(boolean hidden) {
+		this.hidden = hidden;
+	}
+
+	public boolean isHidden() {
+		return this.hidden;
+	}
+
+	public void toggleHidden() {
+		this.hidden = !this.hidden;
+	}
+
+	@Override
+	public String toString() {
+		return "Entity: " + position.toString();
 	}
 
 }

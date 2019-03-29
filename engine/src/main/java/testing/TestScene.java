@@ -1,14 +1,8 @@
 package testing;
 
-//#region
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Handler;
-import java.util.logging.LogManager;
-import java.util.logging.SimpleFormatter;
 
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import core.Constants;
@@ -16,8 +10,11 @@ import core.Scene;
 import core.audio.AudioMaster;
 import core.entities.Camera;
 import core.entities.Entity;
+import core.entities.EntityGroup;
 import core.entities.Light;
 import core.event.KeyEvent;
+import core.event.MouseClickedEvent;
+import core.gui.GUI;
 import core.inputs.Keyboard;
 import core.renderEngine.DisplayManager;
 import tools.Maths;
@@ -28,8 +25,8 @@ import tools.Maths;
  * Scene for testing engine.
  */
 public class TestScene extends Scene {
-
-	private int current = 0;
+	private float distance = 2;
+	private EntityGroup test;
 
 	/**
 	 * Simple Constructor calling Super.
@@ -39,48 +36,38 @@ public class TestScene extends Scene {
 	}
 
 	public void init() {
-		Constants.logger.info("Init");
+		GUI testGui = new GUI("gui/test", new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
 		Light sun = new Light(new Vector3f(0, 1000, -700), Maths.rgbToVector(255, 255, 255));
 		super.lights.add(sun);
-		Constants.logger.info("Texture");
-		/*
-		 * ModelTexture texture = new ModelTexture(Loader.loadTexture("entities/fern"));
-		 * // texture.setReflectivity(10f); // texture.setFakeLighting(true);
-		 * texture.setTransparency(true); Constants.logger.info("Model"); RawModel model
-		 * = Loader.loadToVAO(OBJFileLoader.loadOBJ("entities/fern")); TexturedModel
-		 * texturedModel = new TexturedModel(model, texture);
-		 */
-		// Entity tmp = new Entity(texturedModel, new Vector3f(0, 0, -300), 0, 0, 0,
-		// 0.3f);
-		Entity entity = new Entity("fern", new Vector3f(0, 0, 0), 0.3f);
 		AudioMaster.setDistanceAttenuationMethod(1, true);
 
-		// Source source = new Source();
-		// source.setLooping(true);
-		// source.play(AudioMaster.loadSound("res/audio/songMono.ogg"));
-		// source.setGain(0.1f);
-		// source.setAttenuationVariables(2f, 25, 500);
+		test = new EntityGroup(new Vector3f(0, 0, 0), 18);
 
-		// source.play();
+		for (int i = 0; i < 18; i += 2) {
+			Entity piece = new Entity("pentagoPiece", new Vector3f((i / 6) * distance, 0, ((i / 2) % 3) * distance), 1);
+			Entity ball = new Entity("ball", new Vector3f((i / 6) * distance, 1.2f, ((i / 2) % 3) * distance), 1);
+			ball.setHidden(true);
+			test.setEntity(piece, i);
+			test.setEntity(ball, i + 1);
+		}
 
-		// tmp.connectSource(source);
+		super.camera = new Camera(test.getEntities()[test.getEntities().length / 2]);
 
-		Constants.logger.info("Camera");
-		super.camera = new Camera(entity);
+		for (Entity var : test.getEntities()) {
+			super.entities.add(var);
+		}
 
-		super.entities.add(entity);
-		Constants.logger.info("Done with init()");
 		// picker = new MousePicker(camera, );
 	}
 
 	@Override
 	public void tickGame() {
-		// Constants.logger.info(Constants.state);
-		Constants.logger.info("Tick");
+		// Constants..info(Constants.state);
 		super.camera.move();
 
 		Light.sort(super.lights, super.camera);
 		super.render();
+		GUI.render();
 
 	}
 
@@ -90,29 +77,52 @@ public class TestScene extends Scene {
 
 	@Override
 	public void onKey(KeyEvent ev, boolean press) {
-		Entity entity = super.entities.get(current);
 		if (press) {
 			switch (Keyboard.toCharacter(ev.getKey())) {
-			case "ARROW_LEFT":
-				entity.increasePosition(1, 0, 0);
+			case "NUM_3":
+				test.getEntity(1).toggleHidden();
 				break;
-			case "ARROW_RIGHT":
-				entity.increasePosition(-1, 0, 0);
+			case "NUM_6":
+				test.getEntity(3).toggleHidden();
+
 				break;
-			case "ARROW_UP":
-				entity.increasePosition(0, 0, 1);
+			case "NUM_9":
+				test.getEntity(5).toggleHidden();
+
 				break;
-			case "ARROW_DOWN":
-				entity.increasePosition(0, 0, -1);
+			case "NUM_2":
+				test.getEntity(7).toggleHidden();
+
 				break;
-			case "ENTER":
-				super.entities.add(new Entity("fern", new Vector3f(0, 0, 0), 0.3f));
-				current++;
+			case "NUM_5":
+				test.getEntity(9).toggleHidden();
+
+				break;
+			case "NUM_8":
+				test.getEntity(11).toggleHidden();
+
+				break;
+			case "NUM_1":
+				test.getEntity(13).toggleHidden();
+
+				break;
+			case "NUM_4":
+				test.getEntity(15).toggleHidden();
+				break;
+			case "NUM_7":
+				test.getEntity(17).toggleHidden();
 				break;
 			default:
 				System.out.println(Keyboard.toCharacter(ev.getKey()));
 			}
 		}
+
+	}
+
+	@Override
+	public void onClick(MouseClickedEvent ev, boolean press) {
+		if (press)
+			System.out.println(ev.getX());
 	}
 
 	// Static methods
@@ -122,27 +132,11 @@ public class TestScene extends Scene {
 		// RUN CONFIG FOR DEBUGGING PURPOSES:
 		// -javaagent:/home/michael/eclipse-workspace/engine/libs/debug/lwjglx-debug-1.0.0.jar
 
-		String loggingProperties = "handlers= java.util.logging.ConsoleHandler\r\n" + ".level=WARNING\r\n"
-				+ "java.util.logging.ConsoleHandler.level = INFO\r\n"
-				+ "java.util.logging.ConsoleHandler.formatter = java.util.logging.SimpleFormatter\r\n"
-				+ "java.util.logging.SimpleFormatter.format=[%1$tF %1$tT] [%4$-7s] %5$s %n";
-
-		LogManager.getLogManager()
-				.readConfiguration(new ByteArrayInputStream(loggingProperties.getBytes(StandardCharsets.UTF_8)));
-
-		Constants.logger.setUseParentHandlers(false);
-		Handler ch = new ConsoleHandler();
-		ch.setFormatter(new SimpleFormatter());
-		Constants.logger.addHandler(ch);
-
 		System.setProperty("org.lwjgl.util.Debug", "true");
-		Constants.logger.info("Creating Display");
 		DisplayManager.createDisplay();
-		Constants.logger.info("Done");
 		Constants.state = Constants.STATE.GAME;
 		TestScene scene = new TestScene();
 		scene.start();
-		Constants.logger.info("Closing display");
 		DisplayManager.closeDisplay();
 	}
 

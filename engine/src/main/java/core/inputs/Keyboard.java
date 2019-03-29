@@ -1,14 +1,14 @@
 package core.inputs;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWKeyCallback;
 
 import core.event.Callback;
+import core.event.CallbackStackInterruption;
 import core.event.KeyEvent;
 import core.renderEngine.DisplayManager;
 
@@ -18,7 +18,7 @@ public abstract class Keyboard {
 	private static Map<String, Integer> toKeyCodeMap;
 
 	private static GLFWKeyCallback keyCallback;
-	private static List<Callback> callbacks;
+	private static Stack<Callback> callbacks;
 
 	public static void init() {
 
@@ -27,14 +27,18 @@ public abstract class Keyboard {
 
 		initKeys();
 
-		callbacks = new ArrayList<Callback>();
+		callbacks = new Stack<Callback>();
 
 		GLFW.glfwSetKeyCallback(DisplayManager.window, keyCallback = new GLFWKeyCallback() {
 
 			@Override
 			public void invoke(long window, int key, int scancode, int action, int mods) {
 				for (Callback c : callbacks) {
-					c.invoke(new KeyEvent(key, action, mods));
+					try {
+						c.invoke(new KeyEvent(key, action, mods));
+					} catch (CallbackStackInterruption e) {
+						break;
+					}
 				}
 			}
 		});
@@ -59,7 +63,15 @@ public abstract class Keyboard {
 	}
 
 	public static void addCallback(Callback c) {
-		callbacks.add(c);
+		Stack<Callback> tmpCallStack = new Stack<Callback>();
+
+		while (!callbacks.empty() && tmpCallStack.peek().priority() < c.priority()) {
+			tmpCallStack.push(callbacks.pop());
+		}
+		callbacks.push(c);
+		while (!tmpCallStack.empty()) {
+			callbacks.push(tmpCallStack.pop());
+		}
 	}
 
 	public static void removeCallback(Callback c) {

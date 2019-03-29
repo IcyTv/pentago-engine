@@ -8,7 +8,6 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
@@ -23,7 +22,6 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.stb.STBImage;
 import org.lwjgl.system.MemoryStack;
 
-import core.Constants;
 import core.models.ModelData;
 import core.models.RawModel;
 import core.textures.TextureData;
@@ -31,24 +29,21 @@ import core.textures.TextureData;
 //import de.matthiasmann.twl.utils.PNGDecoder.Format;
 
 public abstract class Loader {
-	
-	public static Logger logger = Logger.getLogger("Debug");
 
-	//Vertex Array Objects for later use
+	// Vertex Array Objects for later use
 	private static List<Integer> vaos = new ArrayList<Integer>();
-	//Vertex Buffer Objects for later use
+	// Vertex Buffer Objects for later use
 	private static List<Integer> vbos = new ArrayList<Integer>();
-	//Texture indices for later use
+	// Texture indices for later use
 	private static List<Integer> textures = new ArrayList<Integer>();
-	
-	
+
 	/**
 	 * Function to load Models into VAO
 	 * 
 	 * @param positions Position of verticies
 	 * @param textures  Texture Coordinates
 	 * @param normals   Normal vectors
-	 * @param indices   
+	 * @param indices
 	 * @return raw model with data
 	 */
 	public static RawModel loadToVAO(float[] positions, float[] textures, float[] normals, int[] indices) {
@@ -60,60 +55,50 @@ public abstract class Loader {
 		unbindVAO();
 		return new RawModel(vaoID, indices.length);
 	}
-	
+
 	public static RawModel loadToVAO(float[] positions, int dimensions) {
 		int vaoID = createVAO();
 		storeDataInAttributeList(0, dimensions, positions);
 		unbindVAO();
 		return new RawModel(vaoID, positions.length / dimensions);
 	}
-	
 
 	public static int loadTexture(String file) {
-		logger.info("Loading texture");
 		int textureID = GL11.glGenTextures();
-		logger.info("textureId: " + textureID);
-		//GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		// GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL13.GL_TEXTURE_2D, textureID);
-		logger.info("Data");
 		TextureData data = decodeTextureFile("res/" + file + ".png");
-		
-		logger.info("Parameters");
+
 		GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
 		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL14.GL_TEXTURE_LOD_BIAS, -0.7f);
 
-
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL13.GL_TEXTURE_BASE_LEVEL, 0);
 		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL13.GL_TEXTURE_MAX_LEVEL, 0);
-		
-        //Setup wrap mode
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
-        
-		logger.info("Connect data to texture");
-		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, data.getWidth(), data.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data.getBuffer());
+
+		// Setup wrap mode
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
+		GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
+
+		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, data.getWidth(), data.getHeight(), 0, GL11.GL_RGBA,
+				GL11.GL_UNSIGNED_BYTE, data.getBuffer());
 		textures.add(textureID);
-		logger.info("Done loading");
 		return textureID;
 	}
-	
 
 	public static int loadCubeMap(String[] textureFiles, String folder) {
 		int textureID = GL11.glGenTextures();
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL13.GL_TEXTURE_CUBE_MAP, textureID);
-		
-		if(!folder.equals("")) {
+
+		if (!folder.equals("")) {
 			folder += "/";
 		}
-		
-		for(int i = 0; i < textureFiles.length; i++) {
+
+		for (int i = 0; i < textureFiles.length; i++) {
 			TextureData data = decodeTextureFile("res/" + folder + textureFiles[i] + ".png");
-			GL11.glTexImage2D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
-					0, GL11.GL_RGBA, data.getWidth(), 
-					data.getHeight(), 0, GL11.GL_RGBA, 
-					GL11.GL_UNSIGNED_BYTE, data.getBuffer());
+			GL11.glTexImage2D(GL13.GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL11.GL_RGBA, data.getWidth(),
+					data.getHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, data.getBuffer());
 		}
 		GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
 		GL11.glTexParameteri(GL13.GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
@@ -122,45 +107,48 @@ public abstract class Loader {
 		textures.add(textureID);
 		return textureID;
 	}
+
 	private static TextureData decodeTextureFile(String fileName) {
 		File f = new File(fileName);
-		
+
 		int width = 0;
 		int height = 0;
 		ByteBuffer imageBuffer = null;
-		
+
 		try {
-			if(!f.exists()) throw new IOException();
-			try(MemoryStack stack = MemoryStack.stackPush()){
+			if (!f.exists())
+				throw new IOException();
+			try (MemoryStack stack = MemoryStack.stackPush()) {
 				IntBuffer w = stack.mallocInt(1);
 				IntBuffer h = stack.mallocInt(1);
 				IntBuffer comp = stack.mallocInt(1);
-				
+
 				imageBuffer = STBImage.stbi_load(f.toString(), w, h, comp, 4);
-				
-				if(imageBuffer == null) throw new IOException();
-				
+
+				if (imageBuffer == null)
+					throw new IOException();
+
 				width = w.get();
-				height = h.get();		
+				height = h.get();
 			}
-		} catch(IOException e) {
-			Constants.logger.severe("Texture " + fileName + " does not exist");
-			Constants.logger.severe(STBImage.stbi_failure_reason());
+		} catch (IOException e) {
+			System.err.println(fileName + " does not exist");
+			e.printStackTrace();
 		}
 		return new TextureData(imageBuffer, width, height);
 	}
-	
+
 	private static int createVAO() {
 		int vaoID = GL30.glGenVertexArrays();
 		vaos.add(vaoID);
 		GL30.glBindVertexArray(vaoID);
 		return vaoID;
 	}
-	
+
 	private static void unbindVAO() {
 		GL30.glBindVertexArray(0);
 	}
-	
+
 	private static void storeDataInAttributeList(int attributeNumber, int coordSize, float[] data) {
 		int vboID = GL15.glGenBuffers();
 		vbos.add(vboID);
@@ -178,13 +166,14 @@ public abstract class Loader {
 		IntBuffer buffer = storeDataInIntBuffer(indicies);
 		GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
 	}
-	
+
 	private static IntBuffer storeDataInIntBuffer(int[] data) {
 		IntBuffer buffer = BufferUtils.createIntBuffer(data.length);
 		buffer.put(data);
 		buffer.flip();
 		return buffer;
 	}
+
 	private static FloatBuffer storeDataInFloatBuffer(float[] data) {
 		FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);
 		buffer.put(data);
@@ -193,21 +182,22 @@ public abstract class Loader {
 	}
 
 	public static RawModel loadToVAO(ModelData modelData) {
-		return loadToVAO(modelData.getVertices(), modelData.getTextureCoords(), modelData.getNormals(), modelData.getIndices());
+		return loadToVAO(modelData.getVertices(), modelData.getTextureCoords(), modelData.getNormals(),
+				modelData.getIndices());
 	}
-	
+
 	public static void cleanUp() {
-		for(int vao: vaos) {
+		for (int vao : vaos) {
 			GL30.glDeleteVertexArrays(vao);
 		}
-		for(int vbo: vbos) {
+		for (int vbo : vbos) {
 			GL15.glDeleteBuffers(vbo);
 		}
-		for(int texture: textures) {
+		for (int texture : textures) {
 			GL11.glDeleteTextures(texture);
 		}
 	}
-	
+
 	/**
 	 * FOR DEBUGGING PURPOSES ONLY
 	 * 
@@ -218,11 +208,11 @@ public abstract class Loader {
 		byte[] buffer = new byte[byteBuffer.capacity()];
 		int n = 0;
 		while (n < byteBuffer.capacity()) {
-		  buffer[n] = byteBuffer.get(n + 0);
-		  buffer[n + 1] = byteBuffer.get(n + 1);
-		  buffer[n + 2] = byteBuffer.get(n + 2);
-		  buffer[n + 3] = byteBuffer.get(n + 3);
-		  n += 4;
+			buffer[n] = byteBuffer.get(n + 0);
+			buffer[n + 1] = byteBuffer.get(n + 1);
+			buffer[n + 2] = byteBuffer.get(n + 2);
+			buffer[n + 3] = byteBuffer.get(n + 3);
+			n += 4;
 		}
 		byteBuffer.rewind();
 		BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
@@ -233,5 +223,5 @@ public abstract class Loader {
 			e.printStackTrace();
 		}
 	}
-	
+
 }

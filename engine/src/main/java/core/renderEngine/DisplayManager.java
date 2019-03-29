@@ -2,8 +2,6 @@ package core.renderEngine;
 
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-import java.util.logging.Logger;
-
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
@@ -13,8 +11,6 @@ import core.audio.AudioMaster;
 import core.inputs.Mouse;
 
 public class DisplayManager {
-
-	public static Logger logger = Logger.getLogger("Debug");
 
 	public static final int WIDTH = 1280;
 	public static final int HEIGHT = 720;
@@ -74,7 +70,6 @@ public class DisplayManager {
 	public static void closeDisplay() {
 		if (clean)
 			return;
-		logger.info("Closing window");
 		AudioMaster.cleanUp();
 		GLFW.glfwDestroyWindow(window);
 		GLFW.glfwTerminate();

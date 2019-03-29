@@ -1,15 +1,19 @@
 package core;
 
+import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.lwjgl.glfw.GLFW;
 
 import core.audio.AudioMaster;
 import core.entities.Camera;
 import core.entities.Entity;
 import core.entities.Light;
+import core.event.Callback;
+import core.event.CallbackStackInterruption;
+import core.event.Event;
 import core.event.KeyEvent;
+import core.event.MouseClickedEvent;
 import core.inputs.Keyboard;
 import core.inputs.Mouse;
 import core.loaders.Loader;
@@ -25,12 +29,13 @@ public abstract class Scene {
 	protected MasterRenderer renderer;
 
 	public Scene() {
+		DisplayManager.createDisplay();
 		Keyboard.init();
 		Mouse.init();
 		try {
 			AudioMaster.init();
 		} catch (Exception e) {
-			Constants.logger.severe(e.getMessage());
+			e.printStackTrace();
 		}
 		entities = new ArrayList<Entity>();
 		lights = new ArrayList<Light>();
@@ -45,9 +50,36 @@ public abstract class Scene {
 
 	public abstract void onKey(KeyEvent ev, boolean press);
 
+	public abstract void onClick(MouseClickedEvent ev, boolean press);
+
 	public void start() {
 
-		Keyboard.addCallback(e -> onKey((KeyEvent) e, ((KeyEvent) e).getAction() == GLFW.GLFW_PRESS));
+		Keyboard.addCallback(new Callback() {
+
+			@Override
+			public void invoke(Event e) {
+				onKey((KeyEvent) e, ((KeyEvent) e).getAction() == GLFW_PRESS);
+			}
+
+			@Override
+			public int priority() {
+				return 10;
+			}
+
+		});
+
+		Mouse.addCallback(new Callback() {
+
+			@Override
+			public int priority() {
+				return 10;
+			}
+
+			@Override
+			public void invoke(Event e) throws CallbackStackInterruption {
+				onClick((MouseClickedEvent) e, ((MouseClickedEvent) e).getAction() == GLFW_PRESS);
+			}
+		});
 
 		init();
 
@@ -85,6 +117,7 @@ public abstract class Scene {
 			}
 		}
 		Keyboard.cleanUp();
+		Mouse.cleanUp();
 		AudioMaster.cleanUp();
 		renderer.cleanUp();
 		entities.clear();
