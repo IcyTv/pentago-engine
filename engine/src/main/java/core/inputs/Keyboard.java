@@ -19,8 +19,14 @@ public abstract class Keyboard {
 
 	private static GLFWKeyCallback keyCallback;
 	private static Stack<Callback> callbacks;
+	
+	private static boolean initialized = false;
 
 	public static void init() {
+		
+		if(initialized) {
+			return;
+		}
 
 		toCharacterMap = new HashMap<Integer, String>();
 		toKeyCodeMap = new HashMap<String, Integer>();
@@ -42,6 +48,8 @@ public abstract class Keyboard {
 				}
 			}
 		});
+		
+		initialized = true;
 	}
 
 	private static void initKeys() {
@@ -64,7 +72,11 @@ public abstract class Keyboard {
 
 	public static void addCallback(Callback c) {
 		Stack<Callback> tmpCallStack = new Stack<Callback>();
-
+		
+		if(!callbacks.empty()) {
+			tmpCallStack.push(callbacks.pop());
+		}
+		
 		while (!callbacks.empty() && tmpCallStack.peek().priority() < c.priority()) {
 			tmpCallStack.push(callbacks.pop());
 		}
@@ -81,6 +93,7 @@ public abstract class Keyboard {
 	public static void cleanUp() {
 		callbacks.clear();
 		keyCallback.free();
+		initialized = false;
 	}
 
 	public static void addKey(int keyCode, String character) {

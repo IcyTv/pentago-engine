@@ -46,6 +46,7 @@
             "mainClass": "testing.TestScene",
             "projectName": "engine",
             "cwd": "${workspaceFolder}/engine"
+            //"vmArgs": "-javaagent:/home/michael/git/pentago-engine/lwjglx-debug-1.0.0.jar"
         }
     ]
 }

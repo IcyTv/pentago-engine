@@ -72,6 +72,10 @@ public abstract class ShaderProgram {
 		value.get(matrixBuffer);
 		GL20.glUniformMatrix4fv(location, false, matrixBuffer);
 	}
+	
+	protected void load2DVector(int location, Vector2f vector){
+        GL20.glUniform2f(location,vector.x,vector.y);
+    }
 
 	public void start() {
 		GL20.glUseProgram(programID);

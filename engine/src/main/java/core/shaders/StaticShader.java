@@ -42,6 +42,8 @@ public class StaticShader extends ShaderProgram{
 	
 	private int location_sampler;
 	
+	private int location_color;
+	
 	public StaticShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
 	}
@@ -85,6 +87,8 @@ public class StaticShader extends ShaderProgram{
 			location_lightColor[i] = super.getUniformLocation("lightColor[" + i + "]");
 			location_attenuation[i] = super.getUniformLocation("attenuation[" + i + "]");
 		}
+		
+		location_color = super.getUniformLocation("color");
 	}
 	
 	public void loadClipPlane(Vector4f plane) {
@@ -151,5 +155,9 @@ public class StaticShader extends ShaderProgram{
 
 	public void loadTexture(int i) {
 		super.loadInt(location_sampler, i);		
+	}
+	
+	public void loadColor(Vector3f c) {
+		super.loadVector(location_color, c);
 	}
 }

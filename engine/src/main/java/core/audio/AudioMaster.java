@@ -22,7 +22,12 @@ public class AudioMaster {
 	private static long device;
 	private static boolean clean = true;
 
+	private static boolean initialized = false;
+
 	public static void init() {
+		if(initialized) {
+			return;
+		}
 		clean = false;
 		buffers = new ArrayList<Integer>();
 		try {
@@ -51,6 +56,8 @@ public class AudioMaster {
 		}
 
 		AL.createCapabilities(deviceCaps);
+		
+		initialized = true;
 	}
 
 	public static void setListenerDataPos(float x, float y, float z) {
@@ -86,6 +93,7 @@ public class AudioMaster {
 		ALC10.alcCloseDevice(device);
 		ALC.destroy();
 		clean = true;
+		initialized = false;
 	}
 
 	/**

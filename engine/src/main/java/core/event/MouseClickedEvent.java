@@ -29,4 +29,10 @@ public class MouseClickedEvent implements Event {
 	public int getAction() {
 		return action;
 	}
+
+	@Override
+	public String eventType() {
+		// TODO Auto-generated method stub
+		return "MouseClickedEvent";
+	}
 }

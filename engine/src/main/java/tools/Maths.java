@@ -11,9 +11,22 @@ public class Maths {
 	public static Matrix4f createTransformationMatrix(Vector2f translation, Vector2f scale) {
 		Matrix4f matrix = new Matrix4f();
 		matrix.identity();
-		matrix.translate(new Vector3f(translation.x, translation.y, 0));
+		matrix = translate(matrix, translation);
+
 		matrix.scale(new Vector3f(scale.x, scale.y, 1f));
 		return matrix;
+	}
+
+	private static Matrix4f translate(Matrix4f src, Vector2f vec) {
+		Matrix4f dest = new Matrix4f();
+
+		dest.m30(dest.m30() + src.m00() * vec.x + src.m10() * vec.y);
+		dest.m31(dest.m31() + src.m01() * vec.x + src.m11() * vec.y);
+		dest.m32(dest.m32() + src.m02() * vec.x + src.m12() * vec.y);
+		dest.m33(dest.m33() + src.m03() * vec.x + src.m13() * vec.y);
+
+		return dest;
+
 	}
 
 	public static float barryCentric(Vector3f p1, Vector3f p2, Vector3f p3, Vector2f pos) {

@@ -55,12 +55,28 @@ public abstract class Loader {
 		unbindVAO();
 		return new RawModel(vaoID, indices.length);
 	}
-
+	
 	public static RawModel loadToVAO(float[] positions, int dimensions) {
+        int vaoID = createVAO();
+        storeDataInAttributeList(0, dimensions, positions);
+        unbindVAO();
+        return new RawModel(vaoID, positions.length / dimensions);
+    }
+ 
+
+	public static int loadToVAO(float[] positions, float[] textureCoords) {
+        int vaoID = createVAO();
+        storeDataInAttributeList(0, 2, positions);
+        storeDataInAttributeList(1, 2, textureCoords);
+        unbindVAO();
+        return vaoID;
+    }
+
+	public static RawModel loadToVAO(float[] positions) {
 		int vaoID = createVAO();
-		storeDataInAttributeList(0, dimensions, positions);
+		storeDataInAttributeList(0, 2, positions);
 		unbindVAO();
-		return new RawModel(vaoID, positions.length / dimensions);
+		return new RawModel(vaoID, positions.length / 2);
 	}
 
 	public static int loadTexture(String file) {
@@ -132,7 +148,7 @@ public abstract class Loader {
 				height = h.get();
 			}
 		} catch (IOException e) {
-			System.err.println(fileName + " does not exist");
+			System.err.println(f.getAbsoluteFile() + " does not exist");
 			e.printStackTrace();
 		}
 		return new TextureData(imageBuffer, width, height);

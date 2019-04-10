@@ -8,6 +8,7 @@ import core.loaders.OBJFileLoader;
 import core.models.RawModel;
 import core.models.TexturedModel;
 import core.textures.ModelTexture;
+import static core.Constants.COLOR;
 
 public class Entity {
 
@@ -16,6 +17,8 @@ public class Entity {
 	private float rotX, rotY, rotZ;
 	private float scale;
 	private boolean hidden;
+	
+	private COLOR color;
 
 	private Source source;
 
@@ -37,19 +40,45 @@ public class Entity {
 		this.hidden = false;
 		this.source = null;
 	}
+	
+	public Entity(TexturedModel model, Vector3f position, float scale) {
+		this(model, 0, position, 0, 0, 0, scale);
+	}
 
-	public Entity(String fileName, Vector3f position, float scale) {
+	public Entity(String fileName, Vector3f vector, float scale) {
 
 		ModelTexture texture = new ModelTexture(Loader.loadTexture("entities/" + fileName));
 		RawModel model = Loader.loadToVAO(OBJFileLoader.loadOBJ("entities/" + fileName));
 		this.model = new TexturedModel(model, texture);
-		this.position = position;
+		this.position = vector;
 		this.rotX = 0;
 		this.rotY = 0;
 		this.rotZ = 0;
 		this.scale = scale;
 		this.textureIndex = 0;
 		source = null;
+	}
+	
+	public void setColor(COLOR c) {
+		this.color = c;
+	}
+	
+	public Vector3f getColor() {
+		if(color == null) {
+			return new Vector3f(0, 0, 0);
+		}
+		switch(color) {
+		case RED:
+			return new Vector3f(1, 0, 0);
+		case GREEN:
+			return new Vector3f(0, 1, 0);
+		case BLUE:
+			return new Vector3f(0, 0, 1);
+		case PURPLE:
+			return new Vector3f(1, 0, 1);
+		default:
+			return new Vector3f(0, 0, 0);
+		}
 	}
 
 	public void increasePosition(float dx, float dy, float dz) {

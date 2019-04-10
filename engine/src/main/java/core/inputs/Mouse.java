@@ -27,8 +27,14 @@ public class Mouse {
 	private static GLFWMouseButtonCallback clickCallback;
 
 	private static Stack<Callback> callbacks;
+	
+	private static boolean initialized = false;
 
 	public static void init() {
+		
+		if(initialized) {
+			return;
+		}
 
 		callbacks = new Stack<Callback>();
 
@@ -64,11 +70,17 @@ public class Mouse {
 				}
 			}
 		});
+		
+		initialized = true;
 
 	}
 
 	public static void addCallback(Callback c) {
 		Stack<Callback> tmpCallStack = new Stack<Callback>();
+		
+		if(!callbacks.empty()) {
+			tmpCallStack.push(callbacks.pop());
+		}
 
 		while (!callbacks.empty() && tmpCallStack.peek().priority() < c.priority()) {
 			tmpCallStack.push(callbacks.pop());
@@ -118,6 +130,7 @@ public class Mouse {
 		if (cursorCallback == null) {
 			return;
 		}
+		initialized = false;
 		// cursorCallback.free();
 		// scrollCallback.free();
 		// clickCallback.free();

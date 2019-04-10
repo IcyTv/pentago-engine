@@ -14,6 +14,8 @@ import core.event.CallbackStackInterruption;
 import core.event.Event;
 import core.event.KeyEvent;
 import core.event.MouseClickedEvent;
+import core.font.TextMaster;
+import core.gui.GUI;
 import core.inputs.Keyboard;
 import core.inputs.Mouse;
 import core.loaders.Loader;
@@ -21,17 +23,23 @@ import core.renderEngine.DisplayManager;
 import core.renderEngine.MasterRenderer;
 
 public abstract class Scene {
+	
+	protected WindowManager manager;
 
 	protected List<Entity> entities;
 	protected List<Light> lights;
+	protected List<GUI> guis;
 	protected Camera camera;
 	// protected MousePicker picker;
 	protected MasterRenderer renderer;
+	
+	private boolean stop;
 
-	public Scene() {
+	public Scene(WindowManager manager) {
 		DisplayManager.createDisplay();
 		Keyboard.init();
 		Mouse.init();
+		TextMaster.init();
 		try {
 			AudioMaster.init();
 		} catch (Exception e) {
@@ -39,75 +47,46 @@ public abstract class Scene {
 		}
 		entities = new ArrayList<Entity>();
 		lights = new ArrayList<Light>();
+		guis = new ArrayList<GUI>();
 		renderer = new MasterRenderer();
+		
+		stop = false;
+		
+		this.manager = manager;
 	}
 
 	public abstract void init();
 
 	public abstract void tickGame();
 
-	public abstract void tickMenu();
-
-	public abstract void onKey(KeyEvent ev, boolean press);
-
-	public abstract void onClick(MouseClickedEvent ev, boolean press);
+	public abstract void cleanUp();
 
 	public void start() {
 
-		Keyboard.addCallback(new Callback() {
-
-			@Override
-			public void invoke(Event e) {
-				onKey((KeyEvent) e, ((KeyEvent) e).getAction() == GLFW_PRESS);
-			}
-
-			@Override
-			public int priority() {
-				return 10;
-			}
-
-		});
-
-		Mouse.addCallback(new Callback() {
-
-			@Override
-			public int priority() {
-				return 10;
-			}
-
-			@Override
-			public void invoke(Event e) throws CallbackStackInterruption {
-				onClick((MouseClickedEvent) e, ((MouseClickedEvent) e).getAction() == GLFW_PRESS);
-			}
-		});
-
 		init();
 
-		while (!DisplayManager.closeRequested()) {
+		while (!DisplayManager.closeRequested() && !stop) {
 			float loopStart = DisplayManager.getCurrentTime();
-			if (Constants.state == Constants.STATE.MENU) {
-				tickMenu();
-			} else if (Constants.state == Constants.STATE.GAME) {
-				tickGame();
-			}
-			sync(loopStart, DisplayManager.TICKRATE);
+			tickGame();
+			DisplayManager.sync(loopStart);
 		}
 		cleanUpEverything();
 	}
 
-	protected void sync(float starttime, int tickrate) {
-		float endtime = starttime + 1.0f / tickrate;
-		while (DisplayManager.getCurrentTime() < endtime) {
-			try {
-				Thread.sleep(1);
-			} catch (InterruptedException e) {
-			}
-		}
-	}
-
 	protected void render() {
 		renderer.renderScene(entities, lights, camera, null);
+		GUI.render(guis);
+		TextMaster.render();
 		DisplayManager.updateDisplay();
+	}
+	
+	protected void addCallback(Callback c) {
+		Keyboard.addCallback(c);
+		Mouse.addCallback(c);
+	}
+	
+	public void stop() {
+		stop = true;
 	}
 
 	public void cleanUpEverything() {
@@ -116,6 +95,8 @@ public abstract class Scene {
 				entity.getSource().delete();
 			}
 		}
+		cleanUp();
+		GUI.cleanUp();
 		Keyboard.cleanUp();
 		Mouse.cleanUp();
 		AudioMaster.cleanUp();

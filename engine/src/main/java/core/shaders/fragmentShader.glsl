@@ -1,6 +1,6 @@
 #version 400 core
 
-const int lightNum = 4;
+const int lightNum = 1;
 
 in vec2 pass_textureCoords;
 in vec3 surfaceNormal;
@@ -19,6 +19,7 @@ uniform float shineDamper;
 uniform float reflectivity;
 
 uniform vec3 skyColor;
+uniform vec3 color;
 
 void main(void){
 
@@ -55,9 +56,12 @@ void main(void){
 	if(textureColor.a < 0.5){
 		discard;
 	}
+	
+	textureColor = mix(textureColor, vec4(color, 1.0), 0.5);
 
 	outCol = vec4(totalDiffuse, 1.0) * textureColor + vec4(totalSpecular, 1.0);
 	outCol = mix(vec4(skyColor, 1.0), outCol, visibility);
+	//outCol = mix(outCol, vec4(color, 1.0), 0.5);
 
 
 	if(textureSize(textureSampler, 0).y <= 1){

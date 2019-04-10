@@ -24,6 +24,10 @@ public class DisplayManager {
 	private static boolean clean = true;
 
 	public static void createDisplay() {
+		if(window != NULL) {
+			return;
+		}
+		
 		clean = false;
 		if (!GLFW.glfwInit()) {
 			// Throw an error.
@@ -58,6 +62,16 @@ public class DisplayManager {
 		GLFW.glfwPollEvents();
 		GLFW.glfwSwapBuffers(window);
 	}
+	
+	public static void sync(float starttime) {
+		float endtime = starttime + 1.0f / TICKRATE;
+		while (getCurrentTime() < endtime) {
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+			}
+		}
+	}
 
 	public static boolean closeRequested() {
 		return GLFW.glfwWindowShouldClose(window);
@@ -81,4 +95,5 @@ public class DisplayManager {
 	public static long getCurrentTime() {
 		return (long) (GLFW.glfwGetTime() * 1000);
 	}
+	
 }

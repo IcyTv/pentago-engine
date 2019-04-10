@@ -1,6 +1,6 @@
 #version 400 core
 
-const int lightNum = 4;
+const int lightNum = 1;
 
 in vec3 position;
 in vec2 textureCoords;

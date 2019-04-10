@@ -26,4 +26,9 @@ public class KeyEvent implements Event {
 		return this.mods;
 	}
 
+	@Override
+	public String eventType() {
+		return "KeyEvent";
+	}
+
 }

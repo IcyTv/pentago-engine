@@ -74,6 +74,7 @@ public class EntityRenderer {
 
 		shader.loadTransformationMatrix(transformationMatrix);
 		shader.loadOffset(entity.getXOffset(), entity.getYOffset());
+		shader.loadColor(entity.getColor());
 	}
 
 	public void loadFog(float density, float gradient) {
