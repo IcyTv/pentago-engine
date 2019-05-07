@@ -1,7 +1,5 @@
 package core;
 
-import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,10 +8,6 @@ import core.entities.Camera;
 import core.entities.Entity;
 import core.entities.Light;
 import core.event.Callback;
-import core.event.CallbackStackInterruption;
-import core.event.Event;
-import core.event.KeyEvent;
-import core.event.MouseClickedEvent;
 import core.font.TextMaster;
 import core.gui.GUI;
 import core.inputs.Keyboard;
@@ -23,7 +17,7 @@ import core.renderEngine.DisplayManager;
 import core.renderEngine.MasterRenderer;
 
 public abstract class Scene {
-	
+
 	protected WindowManager manager;
 
 	protected List<Entity> entities;
@@ -32,7 +26,7 @@ public abstract class Scene {
 	protected Camera camera;
 	// protected MousePicker picker;
 	protected MasterRenderer renderer;
-	
+
 	private boolean stop;
 
 	public Scene(WindowManager manager) {
@@ -49,9 +43,9 @@ public abstract class Scene {
 		lights = new ArrayList<Light>();
 		guis = new ArrayList<GUI>();
 		renderer = new MasterRenderer();
-		
+
 		stop = false;
-		
+
 		this.manager = manager;
 	}
 
@@ -79,12 +73,12 @@ public abstract class Scene {
 		TextMaster.render();
 		DisplayManager.updateDisplay();
 	}
-	
+
 	protected void addCallback(Callback c) {
 		Keyboard.addCallback(c);
 		Mouse.addCallback(c);
 	}
-	
+
 	public void stop() {
 		stop = true;
 	}
