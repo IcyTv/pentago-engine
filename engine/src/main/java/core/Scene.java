@@ -9,7 +9,7 @@ import core.entities.Entity;
 import core.entities.Light;
 import core.event.Callback;
 import core.font.TextMaster;
-import core.gui.GUI;
+import core.gui.GUIImage;
 import core.inputs.Keyboard;
 import core.inputs.Mouse;
 import core.loaders.Loader;
@@ -22,7 +22,7 @@ public abstract class Scene {
 
 	protected List<Entity> entities;
 	protected List<Light> lights;
-	protected List<GUI> guis;
+	protected List<GUIImage> guis;
 	protected Camera camera;
 	// protected MousePicker picker;
 	protected MasterRenderer renderer;
@@ -41,7 +41,7 @@ public abstract class Scene {
 		}
 		entities = new ArrayList<Entity>();
 		lights = new ArrayList<Light>();
-		guis = new ArrayList<GUI>();
+		guis = new ArrayList<GUIImage>();
 		renderer = new MasterRenderer();
 
 		stop = false;
@@ -69,7 +69,7 @@ public abstract class Scene {
 
 	protected void render() {
 		renderer.renderScene(entities, lights, camera, null);
-		GUI.render(guis);
+		GUIImage.render(guis);
 		TextMaster.render();
 		DisplayManager.updateDisplay();
 	}
@@ -90,7 +90,7 @@ public abstract class Scene {
 			}
 		}
 		cleanUp();
-		GUI.cleanUp();
+		GUIImage.cleanUp();
 		Keyboard.cleanUp();
 		Mouse.cleanUp();
 		AudioMaster.cleanUp();

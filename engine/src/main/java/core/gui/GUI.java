@@ -5,49 +5,50 @@ import java.util.List;
 
 import org.joml.Vector2f;
 
-import core.loaders.Loader;
-import core.renderEngine.GUIRenderer;
-import core.textures.GUITexture;
+import core.font.Font;
+import core.font.GUIText;
 
 public class GUI {
 
-	public static final GUIRenderer renderer = new GUIRenderer();
+	private List<GUIImage> images;
+	private List<GUIText> texts;
 
-	GUITexture texture;
-	private boolean hidden;
+	private Vector2f position;
+	private Vector2f scale;
 
-	public GUI(String texturePath, Vector2f position, Vector2f scale) {
-		texture = new GUITexture(Loader.loadTexture(texturePath), position, scale);
-		hidden = false;
+	public GUI(Vector2f position, Vector2f scale) {
+		images = new ArrayList<GUIImage>();
+		texts = new ArrayList<GUIText>();
+
+		this.position = position;
+		this.scale = scale;
 	}
 
-	public static void render(List<GUI> guis) {
-		List<GUITexture> guiTextures = new ArrayList<GUITexture>();
-		for (GUI g : guis) {
-			if (!g.isHidden()) {
-				guiTextures.add(g.texture);
-			}
-		}
-		renderer.render(guiTextures);
-		guiTextures.clear();
+	public void addImage(GUIImage image) {
+		images.add(image);
 	}
 
-	public static void cleanUp() {
-		renderer.cleanUp();
+	public void addImage(String texturePath, Vector2f position, Vector2f scale) {
+		Vector2f tmpPos = position.add(this.position);
+		Vector2f tmpScale = scale.mul(this.scale);
+		images.add(new GUIImage(texturePath, tmpPos, tmpScale));
 	}
 
-	/**
-	 * @return if hidden
-	 */
-	public boolean isHidden() {
-		return hidden;
+	public void addText(GUIText text) {
+		texts.add(text);
 	}
 
-	/**
-	 * @param hidden the hidden to set
-	 */
-	public void setHidden(boolean hidden) {
-		this.hidden = hidden;
+	public void addText(String text, Font font, Vector2f position, int maxLineLength) {
+		Vector2f tmpPos = position.add(this.position);
+		texts.add(new GUIText(text, font, tmpPos, maxLineLength));
+	}
+
+	public List<GUIImage> getImages() {
+		return images;
+	}
+
+	public List<GUIText> getTexts() {
+		return texts;
 	}
 
 }
