@@ -1,5 +1,6 @@
 package core.gui;
 
+import core.event.Event;
 import core.renderEngine.DisplayManager;
 
 public abstract class GUIElement {
@@ -32,6 +33,9 @@ public abstract class GUIElement {
 		} else {
 			this.x = x;
 			this.y = y;
+			
+			this.w = width;
+			this.h = height;
 		}
 		ox = this.x / DisplayManager.WIDTH;
 		oy = this.y / DisplayManager.HEIGHT;
@@ -42,5 +46,7 @@ public abstract class GUIElement {
 	public GUI getGuiElement() {
 		return displayElement;
 	}
+	
+	public abstract void onClick(Event e);
 
 }

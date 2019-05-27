@@ -28,6 +28,10 @@ public class TextMaster {
 		renderer.render(texts);
 	}
 	
+	public static void render(Map<FontType, List<GUIText>> toRender) {
+		renderer.render(toRender);
+	}
+	
 	public static void loadText(GUIText text){
 		FontType font = text.getFont();
 		TextMeshData data = font.loadText(text);

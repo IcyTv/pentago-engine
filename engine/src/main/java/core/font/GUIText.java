@@ -187,5 +187,9 @@ public class GUIText {
 	protected String getTextString() {
 		return textString;
 	}
+	
+	public String toString() {
+		return "GUIText " + textString;
+	}
 
 }

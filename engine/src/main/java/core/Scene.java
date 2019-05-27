@@ -3,12 +3,15 @@ package core;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joml.Vector2f;
+
 import core.audio.AudioMaster;
 import core.entities.Camera;
 import core.entities.Entity;
 import core.entities.Light;
 import core.event.Callback;
 import core.font.TextMaster;
+import core.gui.GUI;
 import core.gui.GUIImage;
 import core.inputs.Keyboard;
 import core.inputs.Mouse;
@@ -22,7 +25,7 @@ public abstract class Scene {
 
 	protected List<Entity> entities;
 	protected List<Light> lights;
-	protected List<GUIImage> guis;
+	protected GUI mainGUI;
 	protected Camera camera;
 	// protected MousePicker picker;
 	protected MasterRenderer renderer;
@@ -41,8 +44,8 @@ public abstract class Scene {
 		}
 		entities = new ArrayList<Entity>();
 		lights = new ArrayList<Light>();
-		guis = new ArrayList<GUIImage>();
 		renderer = new MasterRenderer();
+		mainGUI = new GUI(new Vector2f(0, 0), new Vector2f(1, 1));
 
 		stop = false;
 
@@ -69,8 +72,8 @@ public abstract class Scene {
 
 	protected void render() {
 		renderer.renderScene(entities, lights, camera, null);
-		GUIImage.render(guis);
-		TextMaster.render();
+		GUIImage.render(mainGUI.getImages());
+		TextMaster.render(mainGUI.getRenderMap());
 		DisplayManager.updateDisplay();
 	}
 
