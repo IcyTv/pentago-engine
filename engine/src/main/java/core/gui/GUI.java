@@ -38,7 +38,9 @@ public class GUI {
 	public void addImage(String texturePath, Vector2f position, Vector2f scale) {
 		Vector2f tmpPos = position.add(this.position);
 		Vector2f tmpScale = scale.mul(this.scale);
-		images.add(new GUIImage(texturePath, tmpPos, tmpScale));
+		GUIImage tmp = new GUIImage(texturePath, tmpPos, tmpScale);
+		tmp.setHidden(false);
+		images.add(tmp);
 	}
 
 	public void addText(GUIText text) {
